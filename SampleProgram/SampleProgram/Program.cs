@@ -1,3 +1,1 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-Console.WriteLine( "Sample program works!" );
+﻿Console.WriteLine( "Sample program works!" );
