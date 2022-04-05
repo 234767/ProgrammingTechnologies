@@ -1,8 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.API", "DataAccess.API\DataAccess.API.csproj", "{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUI", "SampleUI\SampleUI.csproj", "{BA8D3645-B0FD-45D2-AA18-653A6A0F0DAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA8D3645-B0FD-45D2-AA18-653A6A0F0DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA8D3645-B0FD-45D2-AA18-653A6A0F0DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA8D3645-B0FD-45D2-AA18-653A6A0F0DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA8D3645-B0FD-45D2-AA18-653A6A0F0DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
