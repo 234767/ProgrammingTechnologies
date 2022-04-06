@@ -1,13 +1,15 @@
+using System;
+using System.Collections.Generic;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
 namespace DataAccess.SampleImpl;
 
-public class LibraryDataContext : ILibraryDataContext
+internal class LibraryDataContext : ILibraryDataContext
 {
-    private readonly IDictionary<string, Book> _books;
-    private readonly ICollection<ILibraryEvent> _events;
-    private readonly ICollection<User> _users;
+    internal readonly IDictionary<string, Book> _books;
+    internal readonly ICollection<ILibraryEvent> _events;
+    internal readonly ICollection<User> _users;
 
     public IUserRepository Users => throw new NotImplementedException();
     public IBookRepository Books => throw new NotImplementedException();
