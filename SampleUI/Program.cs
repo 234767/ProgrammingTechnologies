@@ -1,23 +1,32 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using DataAccess.API.Abstractions;
+using DataAccess.API.DTO;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Configuration;
 
 IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-Assembly assembly = Assembly.LoadFile(configuration.GetSection("DataAccess")["DllPath"]);
+Assembly assembly = Assembly.LoadFile(Path.GetFullPath(configuration.GetSection("DataAccess")["DllPath"]));
 
-Type? repositoryFactoryType = assembly.ExportedTypes
-                                      .First(t => typeof(IDataContextFactory).IsAssignableFrom(t));
+Type repositoryFactoryType = assembly.ExportedTypes
+                                      .FirstOrDefault(t => typeof(IDataContextFactory).IsAssignableFrom(t)) ?? throw new
+                                  RuntimeBinderException($"The assembly {assembly.GetName()} does not contain "
+                                                         + $"any type implementing {nameof(IDataContextFactory)}");
 
-IDataContextFactory dataContextFactory = Activator.CreateInstance(repositoryFactoryType) as IDataContextFactory
-                                       ?? throw new
-                                           RuntimeBinderException($"The assembly {assembly.GetName()} does not contain "
-                                                                  + $"any type implementing {nameof(IDataContextFactory)}");
+IDataContextFactory dataContextFactory = (IDataContextFactory) Activator.CreateInstance(repositoryFactoryType)!;
 
 IUserRepository repository = dataContextFactory.CreateDataContext().Users;
 
+repository.Create(new User(
+                           "234767",
+                           "Jakub",
+                           "Pawlak",
+                           new DateOnly(
+                                        2001,
+                                        01,
+                                        15)));
 Console.WriteLine("Got user: ");
-Console.WriteLine(repository.Get(""));
+Console.WriteLine(repository.Get("234767"));

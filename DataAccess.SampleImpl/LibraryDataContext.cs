@@ -11,6 +11,13 @@ internal class LibraryDataContext : ILibraryDataContext
     internal readonly ICollection<ILibraryEvent> _events;
     internal readonly ICollection<User> _users;
 
+    public LibraryDataContext()
+    {
+        _books = new Dictionary<string, Book>();
+        _events = new List<ILibraryEvent>();
+        _users = new List<User>();
+    }
+
     public IUserRepository Users => new UserRepository(this);
     public IBookRepository Books => new BookRepository(this);
     public IEventRepository Events => new LibraryEventRepository(this);
