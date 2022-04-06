@@ -2,4 +2,4 @@ using System;
 
 namespace DataAccess.API.DTO;
 
-public record Return(string Id, string LeaseId, DateOnly Date);
+public record Return(string Id, Lease Lease, DateOnly Date);

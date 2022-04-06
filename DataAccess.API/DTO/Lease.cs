@@ -2,4 +2,4 @@ using System;
 
 namespace DataAccess.API.DTO;
 
-public record Lease(string Id, string BookId, string UserId, DateOnly Date, TimeSpan LeaseDuration) : ILibraryEvent;
+public record Lease(string Id, Book LeaseBook, User Borrower, DateOnly Date, TimeSpan LeaseDuration) : ILibraryEvent;
