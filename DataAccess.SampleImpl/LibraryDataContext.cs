@@ -12,6 +12,6 @@ internal class LibraryDataContext : ILibraryDataContext
     internal readonly ICollection<User> _users;
 
     public IUserRepository Users => new UserRepository(this);
-    public IBookRepository Books => throw new NotImplementedException();
+    public IBookRepository Books => new BookRepository(this);
     public IEventRepository Events => new LibraryEventRepository(this);
 }

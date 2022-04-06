@@ -30,15 +30,13 @@ internal class UserRepository : IUserRepository
 
     public void Update(User item)
     {
+        foreach ( User user in _context._users )
         {
-            foreach ( User user in _context._users )
-            {
-                if ( user.Id != item.Id )
-                    continue;
+            if ( user.Id != item.Id )
+                continue;
 
-                _context._users.Remove(user);
-                _context._users.Add(item);
-            }
+            _context._users.Remove(user);
+            _context._users.Add(item);
         }
     }
 
