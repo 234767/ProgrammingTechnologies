@@ -47,16 +47,16 @@ internal class LibraryEventRepository : IEventRepository
 
     public IEnumerable<ILibraryEvent> GetAll() => _context._events;
 
-    public User GetBorrower(ILibraryEvent libraryEvent) => libraryEvent switch{
-                                                               Lease l  => l.Borrower,
-                                                               Return r => r.Lease.Borrower,
+    public IUser GetBorrower(ILibraryEvent libraryEvent) => libraryEvent switch{
+                                                               ILease l  => l.Borrower,
+                                                               IReturn r => r.Lease.Borrower,
                                                                _ => throw MakeInvalidTypeException(nameof(libraryEvent),
                                                                         libraryEvent)
                                                            };
 
-    public Book GetBorrowedBook(ILibraryEvent libraryEvent) => libraryEvent switch{
-                                                                          Lease l  => l.LeaseBook,
-                                                                          Return r => r.Lease.LeaseBook,
+    public IBook GetBorrowedBook(ILibraryEvent libraryEvent) => libraryEvent switch{
+                                                                          ILease l  => l.LeasedBook,
+                                                                          IReturn r => r.Lease.LeasedBook,
                                                                           _ => throw MakeInvalidTypeException(nameof(libraryEvent),
                                                                                    libraryEvent)
                                                                       };
@@ -64,6 +64,6 @@ internal class LibraryEventRepository : IEventRepository
     private ArgumentException MakeInvalidTypeException(string argumentName, object invalidArgument)
     {
         return new
-            ArgumentException($"Argument {argumentName} should be of type {nameof(Lease)} or {nameof(Return)}. Instead got {invalidArgument.GetType()}");
+            ArgumentException($"Argument {argumentName} should be of type {nameof(ILease)} or {nameof(IReturn)}. Instead got {invalidArgument.GetType()}");
     }
 }

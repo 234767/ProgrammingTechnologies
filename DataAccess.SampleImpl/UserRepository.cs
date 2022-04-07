@@ -16,21 +16,21 @@ internal class UserRepository : IUserRepository
         _context = context;
     }
 
-    public void Create(User user)
+    public void Create(IUser user)
     {
         _context._users.Add(user);
     }
 
-    public User? Get(string id) => _context._users.FirstOrDefault(u => u.Id.Equals(id));
+    public IUser? Get(string id) => _context._users.FirstOrDefault(u => u.Id.Equals(id));
 
-    public IEnumerable<User> Where(Expression<Func<User, bool>> predicate)
+    public IEnumerable<IUser> Where(Expression<Func<IUser, bool>> predicate)
     {
         return _context._users.Where(predicate.Compile());
     }
 
-    public void Update(User item)
+    public void Update(IUser item)
     {
-        foreach ( User user in _context._users )
+        foreach ( IUser user in _context._users )
         {
             if ( user.Id != item.Id )
                 continue;
@@ -45,12 +45,12 @@ internal class UserRepository : IUserRepository
         _context._users.Remove(_context._users.Single(u => u.Id.Equals(id)));
     }
 
-    public IEnumerable<User> GetAll() => _context._users;
+    public IEnumerable<IUser> GetAll() => _context._users;
 
-    public IEnumerable<Book> GetBooksLeasedBy(User user)
+    public IEnumerable<IBook> GetBooksLeasedBy(IUser user)
     {
-        return from lease in _context._events.OfType<Lease>()
-               where !_context._events.OfType<Return>().Any(r => r.Lease.Equals(lease))
-               select lease.LeaseBook;
+        return from lease in _context._events.OfType<ILease>()
+               where !_context._events.OfType<IReturn>().Any(r => r.Lease.Equals(lease))
+               select lease.LeasedBook;
     }
 }

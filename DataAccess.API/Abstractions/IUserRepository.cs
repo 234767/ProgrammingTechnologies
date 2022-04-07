@@ -3,7 +3,7 @@ using DataAccess.API.DTO;
 
 namespace DataAccess.API.Abstractions;
 
-public interface IUserRepository : IRepository<User>
+public interface IUserRepository : IRepository<IUser>
 {
-    public IEnumerable<Book> GetBooksLeasedBy(User user);
+    public IEnumerable<IBook> GetBooksLeasedBy(IUser user);
 }

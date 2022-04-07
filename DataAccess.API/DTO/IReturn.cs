@@ -2,8 +2,8 @@ using System;
 
 namespace DataAccess.API.DTO;
 
-public interface ILibraryEvent
+public interface IReturn
 {
-    public string Id { get; }
+    public ILease Lease { get; }
     public DateTime Time { get; }
 }

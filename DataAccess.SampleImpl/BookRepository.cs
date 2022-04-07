@@ -16,22 +16,22 @@ internal class BookRepository : IBookRepository
         _context = context;
     }
 
-    public void Create(Book item)
+    public void Create(IBook item)
     {
         _context._books.Add(item.Id, item);
     }
 
-    public Book? Get(string id)
+    public IBook? Get(string id)
     {
-        return _context._books.TryGetValue(id, out Book? book) ? book : null;
+        return _context._books.TryGetValue(id, out IBook? book) ? book : null;
     }
 
-    public IEnumerable<Book> Where(Expression<Func<Book, bool>> predicate)
+    public IEnumerable<IBook> Where(Expression<Func<IBook, bool>> predicate)
     {
         return GetAll().Where(predicate.Compile());
     }
 
-    public void Update(Book item)
+    public void Update(IBook item)
     {
         _context._books[item.Id] = item;
     }
@@ -41,13 +41,13 @@ internal class BookRepository : IBookRepository
         _context._books.Remove(id);
     }
 
-    public IEnumerable<Book> GetAll() => _context._books.Select(kvp => kvp.Value);
+    public IEnumerable<IBook> GetAll() => _context._books.Select(kvp => kvp.Value);
 
-    public User? GetUserWhoLeased(Book book)
+    public IUser? GetUserWhoLeased(IBook book)
     {
         return _context._events
-                       .OfType<Lease>()
-                       .FirstOrDefault(l => _context._events.OfType<Return>().All(r => r.Lease != l))
+                       .OfType<ILease>()
+                       .FirstOrDefault(l => _context._events.OfType<IReturn>().All(r => r.Lease != l))
                        ?.Borrower;
     }
 }
