@@ -45,6 +45,9 @@ internal class BookRepository : IBookRepository
 
     public User? GetUserWhoLeased(Book book)
     {
-        return _context._events.OfType<Lease>().OrderByDescending(l => l.Date).FirstOrDefault()?.Borrower;
+        return _context._events
+                       .OfType<Lease>()
+                       .FirstOrDefault(l => _context._events.OfType<Return>().All(r => r.Lease != l))
+                       ?.Borrower;
     }
 }

@@ -49,11 +49,6 @@ internal class UserRepository : IUserRepository
 
     public IEnumerable<Book> GetBooksLeasedBy(User user)
     {
-        foreach ( KeyValuePair<string, Book> keyValuePair in _context._books )
-        {
-            ( _, Book b ) = keyValuePair;
-        }
-
         return from lease in _context._events.OfType<Lease>()
                where !_context._events.OfType<Return>().Any(r => r.Lease.Equals(lease))
                select lease.LeaseBook;
