@@ -18,6 +18,8 @@ internal class UserRepository : IUserRepository
 
     public void Create(IUser user)
     {
+        if ( _context._users.Any(u => u.Id == user.Id) )
+            return;
         _context._users.Add(user);
     }
 

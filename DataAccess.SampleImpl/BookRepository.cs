@@ -18,12 +18,18 @@ internal class BookRepository : IBookRepository
 
     public void Create(IBook item)
     {
-        _context._books.Add(item.Id, item);
+        if ( _context._books.Any(b => b.Id == item.Id) )
+            return;
+        _context._books.Add(item);
+        if ( !_context._bookInfo.ContainsKey(item.BookInfo.Id) )
+        {
+            _context._bookInfo.Add(item.BookInfo.Id, item.BookInfo);
+        }
     }
 
     public IBook? Get(string id)
     {
-        return _context._books.TryGetValue(id, out IBook? book) ? book : null;
+        return _context._books.FirstOrDefault(b => b.Id == id);
     }
 
     public IEnumerable<IBook> Where(Expression<Func<IBook, bool>> predicate)
@@ -33,15 +39,27 @@ internal class BookRepository : IBookRepository
 
     public void Update(IBook item)
     {
-        _context._books[item.Id] = item;
+        foreach ( IBook book in _context._books )
+        {
+            if ( book.Id != item.Id )
+                continue;
+
+            _context._books.Remove(book);
+            _context._books.Add(item);
+        }
     }
 
     public void Delete(string id)
     {
-        _context._books.Remove(id);
+        IBook bookToRemove = _context._books.First(b => b.Id == id);
+        _context._books.Remove(bookToRemove);
+        if ( _context._bookInfo.Values.All(info => info.Id != bookToRemove.BookInfo.Id) )
+        {
+            _context._bookInfo.Remove(bookToRemove.BookInfo.Id);
+        }
     }
 
-    public IEnumerable<IBook> GetAll() => _context._books.Select(kvp => kvp.Value);
+    public IEnumerable<IBook> GetAll() => _context._books;
 
     public IUser? GetUserWhoLeased(IBook book)
     {

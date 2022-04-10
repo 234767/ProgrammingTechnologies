@@ -18,6 +18,8 @@ internal class LibraryEventRepository : IEventRepository
 
     public void Create(ILibraryEvent libraryEvent)
     {
+        if ( _context._events.Any(e => e.Id == libraryEvent.Id) )
+            return;
         _context._events.Add(libraryEvent);
     }
 

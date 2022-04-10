@@ -2,7 +2,7 @@ using System;
 
 namespace DataAccess.API.DTO;
 
-public class IBookInfo
+public interface IBookInfo
 {
     public string Id { get; }
     public string Title { get; }
