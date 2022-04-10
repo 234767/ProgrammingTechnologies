@@ -39,6 +39,7 @@ internal class UserRepository : IUserRepository
 
             _context._users.Remove(user);
             _context._users.Add(item);
+            return;
         }
     }
 
@@ -52,7 +53,8 @@ internal class UserRepository : IUserRepository
     public IEnumerable<IBook> GetBooksLeasedBy(IUser user)
     {
         return from lease in _context._events.OfType<ILease>()
-               where !_context._events.OfType<IReturn>().Any(r => r.Lease.Equals(lease))
+               where lease.Borrower.Equals(user)
+               && _context._events.OfType<IReturn>().All(r => r.Lease.Id != lease.Id)
                select lease.LeasedBook;
     }
 }

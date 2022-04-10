@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUI", "SampleUI\Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.SampleImpl", "DataAccess.SampleImpl\DataAccess.SampleImpl.csproj", "{5F774225-4CB5-4E3C-877A-D7C8F305DF16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.SampleImpl.Tests", "DataAccess.SampleImpl.Tests\DataAccess.SampleImpl.Tests.csproj", "{0AA6574D-017F-4443-B574-7006B4F234C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{5F774225-4CB5-4E3C-877A-D7C8F305DF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F774225-4CB5-4E3C-877A-D7C8F305DF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F774225-4CB5-4E3C-877A-D7C8F305DF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AA6574D-017F-4443-B574-7006B4F234C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AA6574D-017F-4443-B574-7006B4F234C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AA6574D-017F-4443-B574-7006B4F234C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AA6574D-017F-4443-B574-7006B4F234C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
