@@ -39,7 +39,12 @@ public static class TestingDataProvider
     public static ILibraryDataContext GenerateRandomData()
     {
         ILibraryDataContext context = new LibraryDataContextFactory().CreateDataContext();
-        // Todo
+        User user1 = new User(Guid.NewGuid().ToString(),"","");
+        User user2 = new User(Guid.NewGuid().ToString(), "", "");
+        IBook book = new Random().Next(2) == 1 ? Book1 : Book2;
+        context.Users.Create(user1);
+        context.Users.Create(user2);
+        context.Books.Create(book);
         return context;
     }
 
