@@ -1,4 +1,8 @@
+using System.Runtime.CompilerServices;
 using DataAccess.API.DTO;
+
+[assembly: InternalsVisibleTo("BusinessLogic.Tests")]
+
 
 namespace BusinessLogic;
 
