@@ -50,9 +50,9 @@ internal class LibraryEventRepository : IEventRepository
 
     public IEnumerable<ILibraryEvent> GetAll() => _context._events;
 
-    public ILibraryEvent? GetLatestEventForBook(IBook book) => _context._events.Where(e => GetBookFromEvent(e) == book)
-                                                                       .OrderByDescending(e => e.Time)
-                                                                       .FirstOrDefault();
+    public ILibraryEvent? GetLatestEventForBook(string bookId) => _context._events.Where(e => GetBookFromEvent(e)?.Id == bookId)
+                                                                          .OrderByDescending(e => e.Time)
+                                                                          .FirstOrDefault();
 
     private static IBook? GetBookFromEvent(ILibraryEvent e) => e switch{
                                                                    ILease l  => l.LeasedBook,

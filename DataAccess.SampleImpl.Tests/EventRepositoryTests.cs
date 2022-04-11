@@ -95,8 +95,8 @@ public class EventRepositoryTests
     public void GetLatesEventForBook_ReturnsCorrectEvent()
     {
         _repository = TestingDataProvider.GenerateHardCodedData().Events;
-        _repository.GetLatestEventForBook(TestingDataProvider.Book1).Should().Be(TestingDataProvider.Return1);
-        _repository.GetLatestEventForBook(TestingDataProvider.Book2).Should().Be(TestingDataProvider.Lease2);
+        _repository.GetLatestEventForBook(TestingDataProvider.Book1.Id).Should().Be(TestingDataProvider.Return1);
+        _repository.GetLatestEventForBook(TestingDataProvider.Book2.Id).Should().Be(TestingDataProvider.Lease2);
         
     }
 
