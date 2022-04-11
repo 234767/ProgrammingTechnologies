@@ -4,6 +4,5 @@ namespace DataAccess.API.Abstractions;
 
 public interface IEventRepository : IRepository<ILibraryEvent>
 {
-    public IUser GetBorrower(ILibraryEvent libraryLibraryEvent);
-    public IBook GetBorrowedBook(ILibraryEvent libraryLibraryEvent);
+    public ILibraryEvent? GetLatestEventForBook(IBook book);
 }

@@ -39,6 +39,7 @@ internal class LibraryEventRepository : IEventRepository
 
             _context._events.Remove(libraryEvent);
             _context._events.Add(item);
+            return;
         }
     }
 
@@ -49,23 +50,13 @@ internal class LibraryEventRepository : IEventRepository
 
     public IEnumerable<ILibraryEvent> GetAll() => _context._events;
 
-    public IUser GetBorrower(ILibraryEvent libraryEvent) => libraryEvent switch{
-                                                               ILease l  => l.Borrower,
-                                                               IReturn r => r.Lease.Borrower,
-                                                               _ => throw MakeInvalidTypeException(nameof(libraryEvent),
-                                                                        libraryEvent)
-                                                           };
+    public ILibraryEvent? GetLatestEventForBook(IBook book) => _context._events.Where(e => GetBookFromEvent(e) == book)
+                                                                       .OrderByDescending(e => e.Time)
+                                                                       .FirstOrDefault();
 
-    public IBook GetBorrowedBook(ILibraryEvent libraryEvent) => libraryEvent switch{
-                                                                          ILease l  => l.LeasedBook,
-                                                                          IReturn r => r.Lease.LeasedBook,
-                                                                          _ => throw MakeInvalidTypeException(nameof(libraryEvent),
-                                                                                   libraryEvent)
-                                                                      };
-
-    private ArgumentException MakeInvalidTypeException(string argumentName, object invalidArgument)
-    {
-        return new
-            ArgumentException($"Argument {argumentName} should be of type {nameof(ILease)} or {nameof(IReturn)}. Instead got {invalidArgument.GetType()}");
-    }
+    private static IBook? GetBookFromEvent(ILibraryEvent e) => e switch{
+                                                                   ILease l  => l.LeasedBook,
+                                                                   IReturn r => r.Lease.LeasedBook,
+                                                                   var _     => null
+                                                               };
 }
