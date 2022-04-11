@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using DataAccess.API.Abstractions;
-using DataAccess.API.DTO;
 using FluentAssertions;
 using Xunit;
 
@@ -97,7 +95,7 @@ public class UserRepositoryTests
     }
 
     [Fact]
-    public void GetBooksLeasedBy_ShoudldNotReturnBooks_ThatWereReturned()
+    public void GetBooksLeasedBy_ShouldNotReturnBooks_ThatWereReturned()
     {
         _repository = TestingDataProvider.GenerateHardCodedData().Users;
         var leasedBooks = _repository.GetBooksLeasedBy(TestingDataProvider.User1).ToList();

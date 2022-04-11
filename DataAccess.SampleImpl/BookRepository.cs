@@ -46,6 +46,18 @@ internal class BookRepository : IBookRepository
 
             _context._books.Remove(book);
             _context._books.Add(item);
+            return;
+        }
+    }
+
+    public void UpdateBookInfo(IBookInfo newInfo)
+    {
+        IBookInfo oldInfo = _context._bookInfo[newInfo.Id];
+        _context._bookInfo[newInfo.Id] = newInfo;
+        
+        foreach ( IBook book in _context._books.Where(b => b.BookInfo.Equals(oldInfo)) )
+        {
+            book.BookInfo = newInfo;
         }
     }
 
@@ -53,7 +65,7 @@ internal class BookRepository : IBookRepository
     {
         IBook bookToRemove = _context._books.First(b => b.Id == id);
         _context._books.Remove(bookToRemove);
-        if ( _context._bookInfo.Values.All(info => info.Id != bookToRemove.BookInfo.Id) )
+        if ( _context._books.All(book => book.BookInfo.Id != bookToRemove.BookInfo.Id) )
         {
             _context._bookInfo.Remove(bookToRemove.BookInfo.Id);
         }
@@ -61,11 +73,13 @@ internal class BookRepository : IBookRepository
 
     public IEnumerable<IBook> GetAll() => _context._books;
 
+    public IEnumerable<IBookInfo> GetAllBookInfo() => _context._bookInfo.Values;
+
     public IUser? GetUserWhoLeased(IBook book)
     {
         return _context._events
                        .OfType<ILease>()
-                       .FirstOrDefault(l => _context._events.OfType<IReturn>().All(r => r.Lease != l))
+                       .FirstOrDefault(l => l.LeasedBook == book && _context._events.OfType<IReturn>().All(r => r.Lease != l))
                        ?.Borrower;
     }
 }
