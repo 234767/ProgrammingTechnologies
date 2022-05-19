@@ -20,58 +20,58 @@ public class LibraryService : ILibraryService
 
     public void AddUser(string id, string name, string surname)
     {
-        _users.Create(new User(id, name, surname));
+        _users.CreateAsync(new User(id, name, surname));
     }
 
     public void AddBook(IBookInfo bookInfo)
     {
-        DataAccess.API.DTO.IBookInfo? info = _books.GetAllBookInfo()
+        DataAccess.API.DTO.IBookInfo? info = _books.GetAllBookInfoAsync()
                                                    .FirstOrDefault(info => info.Author == bookInfo.Author
                                                                            && info.Title == bookInfo.Title
                                                                            && info.DatePublished == bookInfo.DateOfIssue);
         info ??= new BookInfo(Guid.NewGuid().ToString(), bookInfo.Title, bookInfo.Author, bookInfo.DateOfIssue);
-        _books.Create(new Book(bookInfo.BookId, info));
+        _books.CreateAsync(new Book(bookInfo.BookId, info));
     }
 
     private record BookInfImpl(string BookId, string Author, string Title, DateOnly? DateOfIssue) : IBookInfo;
     public IBookInfo GetBookInfoById(string bookId)
     {
-        var book = _books.Get(bookId);
+        var book = _books.GetAsync(bookId);
         return new BookInfImpl(bookId, book.BookInfo.Author, book.BookInfo.Title, book.BookInfo.DatePublished);
     }
 
     public void RemoveUser(string userId)
     {
-        _users.Delete(userId);
+        _users.DeleteAsync(userId);
     }
 
     public void RemoveBook(string bookId)
     {
-        _books.Delete(bookId);
+        _books.DeleteAsync(bookId);
     }
 
     public bool TryBorrow(string userId, string bookId)
     {
-        ILibraryEvent? lastEvent = _events.GetLatestEventForBook(bookId);
+        ILibraryEvent? lastEvent = _events.GetLatestEventForBookAsync(bookId);
         if ( lastEvent is ILease )
             return false;
 
 
-        IBook? leasedBook = _books.Get(bookId);
-        IUser? borrower = _users.Get(userId);
+        IBook? leasedBook = _books.GetAsync(bookId);
+        IUser? borrower = _users.GetAsync(userId);
         if ( leasedBook is null || borrower is null )
             return false;
         
-        _events.Create(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, TimeSpan.MaxValue));
+        _events.CreateAsync(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, TimeSpan.MaxValue));
         return true;
     }
 
     public void ReturnBook(string bookId)
     {
-        ILibraryEvent? lastEvent = _events.GetLatestEventForBook(bookId);
+        ILibraryEvent? lastEvent = _events.GetLatestEventForBookAsync(bookId);
         if ( lastEvent is not Lease l )
             throw new InvalidOperationException("Cannot return book when it is not borrowed");
         
-        _events.Create(new Return(Guid.NewGuid().ToString(), l, DateTime.Now));
+        _events.CreateAsync(new Return(Guid.NewGuid().ToString(), l, DateTime.Now));
     }
 }

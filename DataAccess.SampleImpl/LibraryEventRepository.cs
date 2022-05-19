@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
@@ -16,21 +17,21 @@ internal class LibraryEventRepository : IEventRepository
         _context = context;
     }
 
-    public void Create(ILibraryEvent libraryEvent)
+    public async Task CreateAsync(ILibraryEvent libraryEvent)
     {
         if ( _context._events.Any(e => e.Id == libraryEvent.Id) )
             return;
         _context._events.Add(libraryEvent);
     }
 
-    public ILibraryEvent? Get(string id) => _context._events.FirstOrDefault(e => e.Id.Equals(id));
+    public async Task<ILibraryEvent?> GetAsync(string id) => _context._events.FirstOrDefault(e => e.Id.Equals(id));
 
-    public IEnumerable<ILibraryEvent> Where(Expression<Func<ILibraryEvent, bool>> predicate)
+    public async Task<IEnumerable<ILibraryEvent>> WhereAsync(Expression<Func<ILibraryEvent, bool>> predicate)
     {
         return _context._events.Where(predicate.Compile());
     }
 
-    public void Update(ILibraryEvent item)
+    public async Task UpdateAsync(ILibraryEvent item)
     {
         foreach ( ILibraryEvent libraryEvent in _context._events )
         {
@@ -43,16 +44,16 @@ internal class LibraryEventRepository : IEventRepository
         }
     }
 
-    public void Delete(string id)
+    public async Task DeleteAsync(string id)
     {
         _context._events.Remove(_context._events.Single(e => e.Id == id));
     }
 
-    public IEnumerable<ILibraryEvent> GetAll() => _context._events;
+    public async Task<IEnumerable<ILibraryEvent>> GetAllAsync() => _context._events;
 
-    public ILibraryEvent? GetLatestEventForBook(string bookId) => _context._events.Where(e => GetBookFromEvent(e)?.Id == bookId)
-                                                                          .OrderByDescending(e => e.Time)
-                                                                          .FirstOrDefault();
+    public async Task<ILibraryEvent?> GetLatestEventForBookAsync(string bookId) => _context._events.Where(e => GetBookFromEvent(e)?.Id == bookId)
+                                                                                     .OrderByDescending(e => e.Time)
+                                                                                     .FirstOrDefault();
 
     private static IBook? GetBookFromEvent(ILibraryEvent e) => e switch{
                                                                    ILease l  => l.LeasedBook,

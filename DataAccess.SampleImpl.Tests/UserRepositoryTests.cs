@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using FluentAssertions;
 using Xunit;
@@ -16,89 +17,89 @@ public class UserRepositoryTests
     }
 
     [Fact]
-    public void Create_ShouldIncreasesCount_WhenUserDoesNotYetExist()
+    public async Task Create_ShouldIncreasesCount_WhenUserDoesNotYetExist()
     {
-        _repository.GetAll().Count().Should().Be(0);
-        _repository.Create(new User("user_1", "A", "B"));
-        _repository.GetAll().Count().Should().Be(1);
+        (await _repository.GetAllAsync()).Count().Should().Be(0);
+        await _repository.CreateAsync(new User("user_1", "A", "B"));
+        (await _repository.GetAllAsync()).Count().Should().Be(1);
     }
 
     [Fact]
-    public void Create_ShouldNotAddUser_WhenUserWithTheSameIdAlreadyExists()
+    public async Task Create_ShouldNotAddUser_WhenUserWithTheSameIdAlreadyExists()
     {
         const string id = "user_1";
         var originalUser = new User(id, "A", "B");
-        _repository.GetAll().Count().Should().Be(0);
-        _repository.Create(originalUser);
-        _repository.GetAll().Count().Should().Be(1);
+        (await _repository.GetAllAsync()).Count().Should().Be(0);
+        await _repository.CreateAsync(originalUser);
+        (await _repository.GetAllAsync()).Count().Should().Be(1);
 
-        _repository.Create(new User(id, "C", "D"));
-        _repository.GetAll().Count().Should().Be(1);
-        _repository.Get(id).Should().NotBeNull().And.BeSameAs(originalUser);
+        await _repository.CreateAsync(new User(id, "C", "D"));
+        (await _repository.GetAllAsync()).Count().Should().Be(1);
+        (await _repository.GetAsync(id)).Should().NotBeNull().And.BeSameAs(originalUser);
     }
 
     [Fact]
-    public void Where_ShouldReturnAllUsers_ThatMatchTheExpression()
+    public async Task Where_ShouldReturnAllUsers_ThatMatchTheExpression()
     {
-        _repository.Create(new User("user_1", "ABC", "DEF"));
-        _repository.Create(new User("user_2", "abc", "def"));
-        _repository.Create(new User("user_3", "ASD", "zxc"));
+        await _repository.CreateAsync(new User("user_1", "ABC", "DEF"));
+        await _repository.CreateAsync(new User("user_2", "abc", "def"));
+        await _repository.CreateAsync(new User("user_3", "ASD", "zxc"));
 
-        _repository.Where(user => user.FirstName.Equals("abc", StringComparison.InvariantCultureIgnoreCase))
+        (await _repository.WhereAsync(user => user.FirstName.Equals("abc", StringComparison.InvariantCultureIgnoreCase)))
                    .Count()
                    .Should()
                    .Be(2);
 
-        _repository.Where(user => user.FirstName.Contains('A'))
+        (await _repository.WhereAsync(user => user.FirstName.Contains('A')))
                    .Count()
                    .Should()
                    .Be(2);
 
-        _repository.Where(user => user.FirstName.Equals("DSA"))
+        (await _repository.WhereAsync(user => user.FirstName.Equals("DSA")))
                    .Count()
                    .Should()
                    .Be(0);
     }
 
     [Fact]
-    public void Update_ShouldChangeTheUserData_WhenUserWithSuchIdExists()
+    public async Task Update_ShouldChangeTheUserData_WhenUserWithSuchIdExists()
     {
         const string id = "user_2";
-        _repository.Create(new User("user_1", "abc", "def"));
-        _repository.Create(new User(id, "ABC", "DEF"));
+        await _repository.CreateAsync(new User("user_1", "abc", "def"));
+        await _repository.CreateAsync(new User(id, "ABC", "DEF"));
         User updatedUser = new User(id, "QWE", "RTY");
-        _repository.Update(updatedUser);
-        _repository.Get(id).Should().BeSameAs(updatedUser);
+        await _repository.UpdateAsync(updatedUser);
+        (await _repository.GetAsync(id)).Should().BeSameAs(updatedUser);
     }
 
     [Fact]
-    public void Delete_ShouldRemoveUser_IfSuchExists()
+    public async Task Delete_ShouldRemoveUser_IfSuchExists()
     {
         const string id = "user_1";
-        _repository.Create(new User(id,"abd","def"));
-        _repository.Create(new User("user_2","aaa","bbb"));
-        _repository.Create(new User("user_3","ccc","ddd"));
+        await _repository.CreateAsync(new User(id,"abd","def"));
+        await _repository.CreateAsync(new User("user_2","aaa","bbb"));
+        await _repository.CreateAsync(new User("user_3","ccc","ddd"));
 
-        _repository.GetAll().Count().Should().Be(3);
-        _repository.Delete(id);
-        _repository.GetAll().Count().Should().Be(2);
-        _repository.Get(id).Should().BeNull();
+        (await _repository.GetAllAsync()).Count().Should().Be(3);
+        await _repository.DeleteAsync(id);
+        (await _repository.GetAllAsync()).Count().Should().Be(2);
+        (await _repository.GetAsync(id)).Should().BeNull();
     }
 
     [Fact]
-    public void GetBooksLeasedBy_ShouldReturnBooks_ThatWereNotReturned()
+    public async Task GetBooksLeasedBy_ShouldReturnBooks_ThatWereNotReturned()
     {
         _repository = TestingDataProvider.GenerateHardCodedData().Users;
-        var leasedBooks = _repository.GetBooksLeasedBy(TestingDataProvider.User2).ToList();
+        var leasedBooks = (await _repository.GetBooksLeasedByUserAsync(TestingDataProvider.User2)).ToList();
         leasedBooks.Count.Should().Be(1);
         leasedBooks.First().Should().Be(TestingDataProvider.Book2);
     }
 
     [Fact]
-    public void GetBooksLeasedBy_ShouldNotReturnBooks_ThatWereReturned()
+    public async Task GetBooksLeasedBy_ShouldNotReturnBooks_ThatWereReturned()
     {
         _repository = TestingDataProvider.GenerateHardCodedData().Users;
-        var leasedBooks = _repository.GetBooksLeasedBy(TestingDataProvider.User1).ToList();
+        var leasedBooks = (await _repository.GetBooksLeasedByUserAsync(TestingDataProvider.User1)).ToList();
         leasedBooks.Count.Should().Be(0);
     }
 }

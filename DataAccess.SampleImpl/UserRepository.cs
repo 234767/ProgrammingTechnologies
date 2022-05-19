@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
@@ -16,21 +17,21 @@ internal class UserRepository : IUserRepository
         _context = context;
     }
 
-    public void Create(IUser user)
+    public async Task CreateAsync(IUser user)
     {
         if ( _context._users.Any(u => u.Id == user.Id) )
             return;
         _context._users.Add(user);
     }
 
-    public IUser? Get(string id) => _context._users.FirstOrDefault(u => u.Id.Equals(id));
+    public async Task<IUser?> GetAsync(string id) => _context._users.FirstOrDefault(u => u.Id.Equals(id));
 
-    public IEnumerable<IUser> Where(Expression<Func<IUser, bool>> predicate)
+    public async Task<IEnumerable<IUser>> WhereAsync(Expression<Func<IUser, bool>> predicate)
     {
         return _context._users.Where(predicate.Compile());
     }
 
-    public void Update(IUser item)
+    public async Task UpdateAsync(IUser item)
     {
         foreach ( IUser user in _context._users )
         {
@@ -43,14 +44,14 @@ internal class UserRepository : IUserRepository
         }
     }
 
-    public void Delete(string id)
+    public async Task DeleteAsync(string id)
     {
         _context._users.Remove(_context._users.Single(u => u.Id.Equals(id)));
     }
 
-    public IEnumerable<IUser> GetAll() => _context._users;
+    public async Task<IEnumerable<IUser>> GetAllAsync() => _context._users;
 
-    public IEnumerable<IBook> GetBooksLeasedBy(IUser user)
+    public async Task<IEnumerable<IBook>> GetBooksLeasedByUserAsync(IUser user)
     {
         return from lease in _context._events.OfType<ILease>()
                where lease.Borrower.Equals(user)

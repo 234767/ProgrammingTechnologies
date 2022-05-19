@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
@@ -16,7 +17,7 @@ internal class BookRepository : IBookRepository
         _context = context;
     }
 
-    public void Create(IBook item)
+    public async Task CreateAsync(IBook item)
     {
         if ( _context._books.Any(b => b.Id == item.Id) )
             return;
@@ -27,17 +28,17 @@ internal class BookRepository : IBookRepository
         }
     }
 
-    public IBook? Get(string id)
+    public async Task<IBook?> GetAsync(string id)
     {
         return _context._books.FirstOrDefault(b => b.Id == id);
     }
 
-    public IEnumerable<IBook> Where(Expression<Func<IBook, bool>> predicate)
+    public async Task<IEnumerable<IBook>> WhereAsync(Expression<Func<IBook, bool>> predicate)
     {
-        return GetAll().Where(predicate.Compile());
+        return ( await GetAllAsync() ).Where(predicate.Compile());
     }
 
-    public void Update(IBook item)
+    public async Task UpdateAsync(IBook item)
     {
         foreach ( IBook book in _context._books )
         {
@@ -50,18 +51,18 @@ internal class BookRepository : IBookRepository
         }
     }
 
-    public void UpdateBookInfo(IBookInfo newInfo)
+    public async Task UpdateBookInfoAsync(IBookInfo newInfo)
     {
         IBookInfo oldInfo = _context._bookInfo[newInfo.Id];
         _context._bookInfo[newInfo.Id] = newInfo;
-        
+
         foreach ( IBook book in _context._books.Where(b => b.BookInfo.Equals(oldInfo)) )
         {
             book.BookInfo = newInfo;
         }
     }
 
-    public void Delete(string id)
+    public async Task DeleteAsync(string id)
     {
         IBook bookToRemove = _context._books.First(b => b.Id == id);
         _context._books.Remove(bookToRemove);
@@ -71,11 +72,11 @@ internal class BookRepository : IBookRepository
         }
     }
 
-    public IEnumerable<IBook> GetAll() => _context._books;
+    public async Task<IEnumerable<IBook>> GetAllAsync() => _context._books;
 
-    public IEnumerable<IBookInfo> GetAllBookInfo() => _context._bookInfo.Values;
+    public async Task<IEnumerable<IBookInfo>> GetAllBookInfoAsync() => _context._bookInfo.Values;
 
-    public IUser? GetUserWhoLeased(IBook book)
+    public async Task<IUser?> GetUserWhoLeased(IBook book)
     {
         return _context._events
                        .OfType<ILease>()

@@ -26,13 +26,13 @@ public static class TestingDataProvider
     public static ILibraryDataContext GenerateHardCodedData()
     {
         ILibraryDataContext context = new LibraryDataContextFactory().CreateDataContext();
-        context.Users.Create(User1);
-        context.Users.Create(User2);
-        context.Books.Create(Book1);
-        context.Books.Create(Book2);
-        context.Events.Create(Lease1);
-        context.Events.Create(Return1);
-        context.Events.Create(Lease2);
+        context.Users.CreateAsync(User1);
+        context.Users.CreateAsync(User2);
+        context.Books.CreateAsync(Book1);
+        context.Books.CreateAsync(Book2);
+        context.Events.CreateAsync(Lease1);
+        context.Events.CreateAsync(Return1);
+        context.Events.CreateAsync(Lease2);
         return context;
     }
 
@@ -42,9 +42,9 @@ public static class TestingDataProvider
         User user1 = new User(Guid.NewGuid().ToString(),"","");
         User user2 = new User(Guid.NewGuid().ToString(), "", "");
         IBook book = new Random().Next(2) == 1 ? Book1 : Book2;
-        context.Users.Create(user1);
-        context.Users.Create(user2);
-        context.Books.Create(book);
+        context.Users.CreateAsync(user1);
+        context.Users.CreateAsync(user2);
+        context.Books.CreateAsync(book);
         return context;
     }
 

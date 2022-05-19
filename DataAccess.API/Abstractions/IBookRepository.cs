@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataAccess.API.DTO;
 
 namespace DataAccess.API.Abstractions;
 
 public interface IBookRepository : IRepository<IBook>
 {
-    public void UpdateBookInfo(IBookInfo newInfo);
+    public Task UpdateBookInfoAsync(IBookInfo newInfo);
 
-    public IEnumerable<IBookInfo> GetAllBookInfo();
-    public IUser? GetUserWhoLeased(IBook book);
+    public Task<IEnumerable<IBookInfo>> GetAllBookInfoAsync();
+    public Task<IUser?> GetUserWhoLeased(IBook book);
 }
