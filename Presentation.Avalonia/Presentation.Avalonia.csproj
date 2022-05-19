@@ -18,4 +18,9 @@
     <ItemGroup>
       <ProjectReference Include="..\Presentation.Core\Presentation.Core.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\BookView.axaml.cs">
+        <DependentUpon>BookView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

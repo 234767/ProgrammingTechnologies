@@ -13,23 +13,26 @@
     </Design.DataContext>
 
 
-    <StackPanel>
-        <ProgressBar Height="30" Margin="10" Maximum="100" Value="{Binding Progress}" />
-        <Slider Margin="10" Maximum="100" Value="{Binding Progress}" />
-        <Button Margin="10" Command="{Binding OnButtonClickCommand}">Siema</Button>
-        <ListBox Items="{Binding Books}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Title}" />
-                        <Button>
-                            <TextBlock Text="{Binding PublicationYear}" />
-                        </Button>
-                        <TextBlock Text="{Binding Author}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </StackPanel>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Books" >
+                <MenuItem Header="Add New" />
+                <MenuItem Header="Search" />
+                <MenuItem Header="Check Status" />
+            </MenuItem>
+            <MenuItem Header="Members">
+                <MenuItem Header="Register new" />
+                <MenuItem Header="Search" />
+            </MenuItem>
+            <MenuItem Header="Transactions">
+                <MenuItem Header="Register Lease"/>
+                <MenuItem Header="Register Return"/>
+            </MenuItem>
+        </Menu>
+        <Canvas>
+            <ContentControl Content="{Binding SelectedViewModel}"></ContentControl>
+        </Canvas>
+        
+    </DockPanel>
 
 </Window>
