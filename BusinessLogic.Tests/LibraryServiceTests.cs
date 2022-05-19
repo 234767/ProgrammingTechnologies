@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using FluentAssertions;
 using NSubstitute;
@@ -23,18 +24,18 @@ public class LibraryServiceTests
     }
 
     [Fact]
-    public void BorrowingBook_ReturnsTrue_WhenBookIsAvailable()
+    public async Task BorrowingBook_ReturnsTrue_WhenBookIsAvailable()
     {
         const string userId = "user_1";
         const string bookId = "book_1";
         _bookRepository.GetAsync(bookId).Returns(new Book(bookId, new BookInfo("", "", "", null)));
         _userRepository.GetAsync(userId).Returns(new User(userId, "", ""));
         _eventRepository.GetLatestEventForBookAsync(bookId).ReturnsNull();
-        _library.TryBorrow(userId, bookId).Should().BeTrue();
+        ( await _library.TryBorrow(userId, bookId) ).Should().BeTrue();
     }
 
     [Fact]
-    public void BorrowingBook_ReturnsFalse_WhenBookIsLeased()
+    public async Task BorrowingBook_ReturnsFalse_WhenBookIsLeased()
     {
         const string userId = "user_1";
         const string bookId = "book_1";
@@ -43,28 +44,28 @@ public class LibraryServiceTests
         var user = new User(userId, "", "");
         _userRepository.GetAsync(userId).Returns(user);
         _eventRepository.GetLatestEventForBookAsync(bookId).Returns(new Lease("lease_1", DateTime.Now, book, user, TimeSpan.MaxValue));
-        _library.TryBorrow(userId, bookId).Should().BeFalse();
+        ( await _library.TryBorrow(userId, bookId) ).Should().BeFalse();
     }
     
     [Fact]
-    public void BorrowingBook_ReturnsFalse_WhenBookDoesNotExist()
+    public async Task BorrowingBook_ReturnsFalse_WhenBookDoesNotExist()
     {
         const string userId = "user_1";
         const string bookId = "book_1";
         _bookRepository.GetAsync(bookId).ReturnsNull();
         var user = new User(userId, "", "");
         _userRepository.GetAsync(userId).Returns(user);
-        _library.TryBorrow(userId, bookId).Should().BeFalse();
+        ( await _library.TryBorrow(userId, bookId) ).Should().BeFalse();
     }
     
     [Fact]
-    public void BorrowingBook_ReturnsFalse_WhenUserDoesNotExist()
+    public async Task BorrowingBook_ReturnsFalse_WhenUserDoesNotExist()
     {
         const string userId = "user_1";
         const string bookId = "book_1";
         var book = new Book(bookId, new BookInfo("", "", "", null));
         _bookRepository.GetAsync(bookId).Returns(book);
         _userRepository.GetAsync(userId).ReturnsNull();
-        _library.TryBorrow(userId, bookId).Should().BeFalse();
+        ( await _library.TryBorrow(userId, bookId) ).Should().BeFalse();
     }
 }

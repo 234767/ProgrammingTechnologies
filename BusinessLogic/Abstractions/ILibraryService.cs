@@ -2,11 +2,11 @@ namespace BusinessLogic.Abstractions;
 
 public interface ILibraryService
 {
-    void AddUser(string id, string name, string surname);
-    void AddBook(IBookInfo bookInfo);
-    IBookInfo GetBookInfoById(string bookId);
-    void RemoveUser(string userId);
-    void RemoveBook(string bookId);
-    bool TryBorrow(string userId, string bookId);
-    void ReturnBook(string bookId);
+    Task AddUser(string id, string name, string surname);
+    Task AddBook(IBookInfo bookInfo);
+    Task<IBookInfo?> GetBookInfoById(string bookId);
+    Task RemoveUser(string userId);
+    Task RemoveBook(string bookId);
+    Task<bool> TryBorrow(string userId, string bookId);
+    Task ReturnBook(string bookId);
 }
