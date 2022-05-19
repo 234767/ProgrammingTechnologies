@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Presentation.Core.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Presentation.Avalonia.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Presentation.Avalonia">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+
+    <StackPanel>
+        <ProgressBar Height="30" Margin="10" Maximum="100" Value="{Binding Progress}" />
+        <Slider Margin="10" Maximum="100" Value="{Binding Progress}" />
+        <Button Margin="10" Command="{Binding OnButtonClickCommand}">Siema</Button>
+        <ListBox Items="{Binding Books}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}" />
+                        <Button>
+                            <TextBlock Text="{Binding PublicationYear}" />
+                        </Button>
+                        <TextBlock Text="{Binding Author}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+
+</Window>
