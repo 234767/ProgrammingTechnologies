@@ -25,7 +25,7 @@ public static class TestingDataProvider
     
     public static ILibraryDataContext GenerateHardCodedData()
     {
-        ILibraryDataContext context = new LibraryDataContextFactory().CreateDataContext();
+        ILibraryDataContext context = new LibraryDataLayerFactory().CreateDataContext();
         context.Users.CreateAsync(User1);
         context.Users.CreateAsync(User2);
         context.Books.CreateAsync(Book1);
@@ -38,7 +38,7 @@ public static class TestingDataProvider
 
     public static ILibraryDataContext GenerateRandomData()
     {
-        ILibraryDataContext context = new LibraryDataContextFactory().CreateDataContext();
+        ILibraryDataContext context = new LibraryDataLayerFactory().CreateDataContext();
         User user1 = new User(Guid.NewGuid().ToString(),"","");
         User user2 = new User(Guid.NewGuid().ToString(), "", "");
         IBook book = new Random().Next(2) == 1 ? Book1 : Book2;
@@ -50,6 +50,6 @@ public static class TestingDataProvider
 
     public static ILibraryDataContext GetEmptyDataContext()
     {
-        return new LibraryDataContextFactory().CreateDataContext();
+        return new LibraryDataLayerFactory().CreateDataContext();
     }
 }

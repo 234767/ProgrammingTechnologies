@@ -38,10 +38,12 @@ public class LibraryService : ILibraryService
     public async Task<IBookInfo?> GetBookInfoById(string bookId)
     {
         var book = await _books.GetAsync(bookId);
+
         if ( book is null )
         {
             return null;
         }
+
         return new BookInfImpl(bookId, book.BookInfo.Author, book.BookInfo.Title, book.BookInfo.DatePublished);
     }
 
