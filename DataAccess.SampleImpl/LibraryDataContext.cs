@@ -1,25 +1,27 @@
-using System.Collections.Generic;
 using DataAccess.API.Abstractions;
-using DataAccess.API.DTO;
+using DataAccess.Database.Dto;
+using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.SampleImpl;
+namespace DataAccess.Database;
 
-internal class LibraryDataContext : ILibraryDataContext
+internal class LibraryDataContext : DbContext, ILibraryDataContext
 {
-    internal readonly IDictionary<string, IBookInfo> _bookInfo;
-    internal readonly ICollection<IBook> _books;
-    internal readonly ICollection<ILibraryEvent> _events;
-    internal readonly ICollection<IUser> _users;
+    internal DbSet<BookInfoDto> BookInfos { get; } = null!;
+    internal DbSet<BookDto> Books { get; } = null!;
+    internal DbSet<LeaseDto> Leases { get; } = null!;
+    internal DbSet<ReturnDto> Returns { get; } = null!;
+    internal DbSet<UserDto> Users { get; } = null!;
 
-    public LibraryDataContext()
+    protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
     {
-        _books = new List<IBook>();
-        _bookInfo = new Dictionary<string, IBookInfo>();
-        _events = new List<ILibraryEvent>();
-        _users = new List<IUser>();
+        optionsBuilder.UseSqlServer(
+            @"Data Source=ASUS-KUBA;Initial Catalog=library;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" );
     }
 
-    public IUserRepository Users => new UserRepository(this);
-    public IBookRepository Books => new BookRepository(this);
-    public IEventRepository Events => new LibraryEventRepository(this);
+    protected override void OnModelCreating( ModelBuilder modelBuilder )
+    {
+        modelBuilder.Entity<BookDto>().HasOne( book => (BookInfoDto) book.BookInfo );
+        modelBuilder.Entity<LeaseDto>().HasOne( lease => (UserDto)lease.Borrower );
+        modelBuilder.Entity<LeaseDto>().HasOne( lease => (BookDto)lease.LeasedBook );
+    }
 }

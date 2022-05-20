@@ -2,7 +2,7 @@ using System;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
-namespace DataAccess.SampleImpl.Tests;
+namespace DataAccess.Database.Tests;
 
 public static class TestingDataProvider
 {

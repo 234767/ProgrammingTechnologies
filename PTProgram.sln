@@ -5,9 +5,9 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.API", "DataAccess.API\DataAccess.API.csproj", "{C6FB7FD8-5EA0-4368-8A37-A0D0A665346C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.SampleImpl", "DataAccess.SampleImpl\DataAccess.SampleImpl.csproj", "{5F774225-4CB5-4E3C-877A-D7C8F305DF16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Database", "DataAccess.SampleImpl\DataAccess.Database.csproj", "{5F774225-4CB5-4E3C-877A-D7C8F305DF16}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.SampleImpl.Tests", "DataAccess.SampleImpl.Tests\DataAccess.SampleImpl.Tests.csproj", "{0AA6574D-017F-4443-B574-7006B4F234C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Database.Tests", "DataAccess.SampleImpl.Tests\DataAccess.Database.Tests.csproj", "{0AA6574D-017F-4443-B574-7006B4F234C5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{58B6B832-0A15-401F-8218-6267CB51B01A}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Avalonia", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Core", "Presentation.Core\Presentation.Core.csproj", "{421D3FFC-4900-49D1-A9CF-A86424A33933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.WPF", "Presentation.WPF\Presentation.WPF.csproj", "{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.WPF", "Presentation.WPF\Presentation.WPF.csproj", "{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

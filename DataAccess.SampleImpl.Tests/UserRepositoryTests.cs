@@ -5,7 +5,7 @@ using DataAccess.API.Abstractions;
 using FluentAssertions;
 using Xunit;
 
-namespace DataAccess.SampleImpl.Tests;
+namespace DataAccess.Database.Tests;
 
 public class UserRepositoryTests
 {

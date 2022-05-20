@@ -1,8 +1,7 @@
 using System;
-using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
-namespace DataAccess.SampleImpl.Tests;
+namespace DataAccess.Database.Tests;
 
 public record BookInfo(string Id, string Title, string Author, DateOnly? DatePublished) : IBookInfo;
 

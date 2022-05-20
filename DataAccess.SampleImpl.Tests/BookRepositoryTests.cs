@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 using FluentAssertions;
+using Xunit;
 
-namespace DataAccess.SampleImpl.Tests;
+namespace DataAccess.Database.Tests;
 
 public class BookRepositoryTests
 {

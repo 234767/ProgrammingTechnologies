@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
-namespace DataAccess.SampleImpl;
+namespace DataAccess.Database;
 
 internal class BookRepository : IBookRepository
 {
@@ -19,18 +19,18 @@ internal class BookRepository : IBookRepository
 
     public async Task CreateAsync(IBook item)
     {
-        if ( _context._books.Any(b => b.Id == item.Id) )
+        if ( _context.Books.Any(b => b.Id == item.Id) )
             return;
-        _context._books.Add(item);
-        if ( !_context._bookInfo.ContainsKey(item.BookInfo.Id) )
-        {
-            _context._bookInfo.Add(item.BookInfo.Id, item.BookInfo);
-        }
+        //_context.Books.Add(item);
+        //if ( !_context.BookInfos.ContainsKey(item.BookInfo.Id) )
+        //{
+        //    _context.BookInfos.Add(item.BookInfo.Id, item.BookInfo);
+        //}
     }
 
     public async Task<IBook?> GetAsync(string id)
     {
-        return _context._books.FirstOrDefault(b => b.Id == id);
+        return _context.Books.FirstOrDefault(b => b.Id == id);
     }
 
     public async Task<IEnumerable<IBook>> WhereAsync(Expression<Func<IBook, bool>> predicate)
@@ -40,47 +40,48 @@ internal class BookRepository : IBookRepository
 
     public async Task UpdateAsync(IBook item)
     {
-        foreach ( IBook book in _context._books )
+        foreach ( IBook book in _context.Books )
         {
             if ( book.Id != item.Id )
                 continue;
 
-            _context._books.Remove(book);
-            _context._books.Add(item);
+            //_context.Books.Remove(book);
+            //_context.Books.Add(item);
             return;
         }
     }
 
     public async Task UpdateBookInfoAsync(IBookInfo newInfo)
     {
-        IBookInfo oldInfo = _context._bookInfo[newInfo.Id];
-        _context._bookInfo[newInfo.Id] = newInfo;
+        //IBookInfo oldInfo = _context._bookInfo[newInfo.Id];
+        //_context._bookInfo[newInfo.Id] = newInfo;
 
-        foreach ( IBook book in _context._books.Where(b => b.BookInfo.Equals(oldInfo)) )
-        {
-            book.BookInfo = newInfo;
-        }
+        //foreach ( IBook book in _context.Books.Where(b => b.BookInfo.Equals(oldInfo)) )
+        //{
+        //    book.BookInfo = newInfo;
+        //}
     }
 
     public async Task DeleteAsync(string id)
     {
-        IBook bookToRemove = _context._books.First(b => b.Id == id);
-        _context._books.Remove(bookToRemove);
-        if ( _context._books.All(book => book.BookInfo.Id != bookToRemove.BookInfo.Id) )
-        {
-            _context._bookInfo.Remove(bookToRemove.BookInfo.Id);
-        }
+        //IBook bookToRemove = _context.Books.First(b => b.Id == id);
+        //_context.Books.Remove(bookToRemove);
+        //if ( _context.Books.All(book => book.BookInfo.Id != bookToRemove.BookInfo.Id) )
+        //{
+        //    _context._bookInfo.Remove(bookToRemove.BookInfo.Id);
+        //}
     }
 
-    public async Task<IEnumerable<IBook>> GetAllAsync() => _context._books;
+    public async Task<IEnumerable<IBook>> GetAllAsync() => _context.Books;
 
-    public async Task<IEnumerable<IBookInfo>> GetAllBookInfoAsync() => _context._bookInfo.Values;
+    public async Task<IEnumerable<IBookInfo>> GetAllBookInfoAsync() => null;//_context._bookInfo.Values;
 
     public async Task<IUser?> GetUserWhoLeased(IBook book)
     {
-        return _context._events
-                       .OfType<ILease>()
-                       .FirstOrDefault(l => l.LeasedBook == book && _context._events.OfType<IReturn>().All(r => r.Lease != l))
-                       ?.Borrower;
+        return null;
+        //    return _context._events
+        //                   .OfType<ILease>()
+        //                   .FirstOrDefault(l => l.LeasedBook == book && _context._events.OfType<IReturn>().All(r => r.Lease != l))
+        //                   ?.Borrower;
     }
 }

@@ -1,6 +1,6 @@
 using DataAccess.API.Abstractions;
 
-namespace DataAccess.SampleImpl;
+namespace DataAccess.Database;
 
 public class LibraryDataContextFactory : IDataContextFactory
 {

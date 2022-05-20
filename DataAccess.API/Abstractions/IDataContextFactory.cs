@@ -4,3 +4,5 @@ public interface IDataContextFactory
 {
     ILibraryDataContext CreateDataContext();
 }
+
+public interface ILibraryDataContext { }
