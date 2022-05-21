@@ -11,16 +11,16 @@ public class DatabaseDataLayerFactory : IDataLayerFactory
     {
         _dataContext = new LibraryDataContext();
     }
+    
+    public DatabaseDataLayerFactory(string connectionString)
+    {
+        _dataContext = new LibraryDataContext(connectionString);
+    }
 
     public IBookRepository CreateBookRepository() => new BookRepository( _dataContext );
 
     public IUserRepository CreateUserRepository() => new UserRepository( _dataContext );
 
     public IEventRepository CreateEventRepository() => new LibraryEventRepository( _dataContext );
-
-    [Obsolete]
-    public ILibraryDataContext CreateDataContext()
-    {
-        throw new System.NotSupportedException("This method is deprecated");
-    }
+    
 }

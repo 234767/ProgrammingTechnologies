@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Database;
 
-internal class LibraryDataContext : DbContext, ILibraryDataContext
+internal class LibraryDataContext : DbContext
 {
     private const string DefaultConnectionString =
         @"Data Source=ASUS-KUBA;Initial Catalog=library;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";

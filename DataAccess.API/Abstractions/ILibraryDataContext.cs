@@ -1,1 +1,0 @@
-namespace DataAccess.API.Abstractions;

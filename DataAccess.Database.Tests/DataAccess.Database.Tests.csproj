@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DataAccess.SampleImpl\DataAccess.Database.csproj" />
+      <ProjectReference Include="..\DataAccess.Database\DataAccess.Database.csproj" />
     </ItemGroup>
 
 </Project>
