@@ -3,7 +3,7 @@ using DataAccess.API.DTO;
 
 namespace DataAccess.Database.Tests;
 
-public record BookInfo(string Id, string Title, string Author, DateOnly? DatePublished) : IBookInfo;
+public record BookInfo(string Id, string Title, string Author, DateTime? DatePublished) : IBookInfo;
 
 public record User(string Id, string FirstName, string Surname) : IUser;
 
