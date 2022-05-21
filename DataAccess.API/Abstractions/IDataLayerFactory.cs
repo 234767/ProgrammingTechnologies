@@ -8,5 +8,7 @@ public interface IDataLayerFactory
 
     IUserRepository CreateUserRepository();
 
-    IEventRepository CreateEventRepository();
+    ILeaseRepository CreateLeaseRepository();
+
+    IReturnRepository CreateReturnRepository();
 }

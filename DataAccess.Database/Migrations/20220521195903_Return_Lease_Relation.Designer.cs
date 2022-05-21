@@ -4,6 +4,7 @@ using DataAccess.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SampleImpl.Migrations
 {
     [DbContext(typeof(LibraryDataContext))]
-    partial class LibraryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20220521195903_Return_Lease_Relation")]
+    partial class Return_Lease_Relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,7 +94,7 @@ namespace DataAccess.SampleImpl.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("LeaseId")
+                    b.Property<string>("LeaseDtoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -101,7 +103,7 @@ namespace DataAccess.SampleImpl.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeaseId");
+                    b.HasIndex("LeaseDtoId");
 
                     b.ToTable("Returns");
                 });
@@ -156,13 +158,13 @@ namespace DataAccess.SampleImpl.Migrations
 
             modelBuilder.Entity("DataAccess.Database.Dto.ReturnDto", b =>
                 {
-                    b.HasOne("DataAccess.Database.Dto.LeaseDto", "Lease")
+                    b.HasOne("DataAccess.Database.Dto.LeaseDto", "LeaseDto")
                         .WithMany()
-                        .HasForeignKey("LeaseId")
+                        .HasForeignKey("LeaseDtoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Lease");
+                    b.Navigation("LeaseDto");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,7 +4,4 @@ using DataAccess.API.DTO;
 
 namespace DataAccess.API.Abstractions;
 
-public interface IUserRepository : IRepository<IUser>
-{
-    public Task<IEnumerable<IBook>> GetBooksLeasedByUserAsync(IUser user);
-}
+public interface IUserRepository : IRepository<IUser> { }

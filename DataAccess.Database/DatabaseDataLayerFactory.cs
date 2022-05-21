@@ -1,5 +1,6 @@
 using System;
 using DataAccess.API.Abstractions;
+using DataAccess.Database.Repositories;
 
 namespace DataAccess.Database;
 
@@ -21,6 +22,7 @@ public class DatabaseDataLayerFactory : IDataLayerFactory
 
     public IUserRepository CreateUserRepository() => new UserRepository( _dataContext );
 
-    public IEventRepository CreateEventRepository() => new LibraryEventRepository( _dataContext );
-    
+    public ILeaseRepository CreateLeaseRepository() => new LeaseRepository( _dataContext );
+
+    public IReturnRepository CreateReturnRepository() => new ReturnRepository( _dataContext );
 }

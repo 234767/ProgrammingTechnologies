@@ -6,5 +6,5 @@ public interface ILease : ILibraryEvent
 {
     public IBook LeasedBook { get; }
     public IUser Borrower { get; }
-    public TimeSpan Duration { get; }
+    public DateTime ReturnDate { get; }
 }

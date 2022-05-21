@@ -2,7 +2,7 @@
 
 namespace DataAccess.Database.Dto
 {
-    internal class BookDto : IBook
+    public class BookDto : IBook
     {
         public string Id { get; set; } = null!;
 

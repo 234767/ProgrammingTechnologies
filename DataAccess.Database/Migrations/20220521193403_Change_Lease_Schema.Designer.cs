@@ -4,6 +4,7 @@ using DataAccess.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SampleImpl.Migrations
 {
     [DbContext(typeof(LibraryDataContext))]
-    partial class LibraryDataContextModelSnapshot : ModelSnapshot
+    [Migration("20220521193403_Change_Lease_Schema")]
+    partial class Change_Lease_Schema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,16 +94,10 @@ namespace DataAccess.SampleImpl.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("LeaseId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LeaseId");
 
                     b.ToTable("Returns");
                 });
@@ -152,17 +148,6 @@ namespace DataAccess.SampleImpl.Migrations
                     b.Navigation("Borrower");
 
                     b.Navigation("LeasedBook");
-                });
-
-            modelBuilder.Entity("DataAccess.Database.Dto.ReturnDto", b =>
-                {
-                    b.HasOne("DataAccess.Database.Dto.LeaseDto", "Lease")
-                        .WithMany()
-                        .HasForeignKey("LeaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lease");
                 });
 #pragma warning restore 612, 618
         }

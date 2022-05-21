@@ -3,7 +3,7 @@ using DataAccess.API.DTO;
 
 namespace DataAccess.Database.Dto
 {
-    internal class BookInfoDto : IBookInfo
+    public class BookInfoDto : IBookInfo
     {
         public string Id { get; set; } = null!;
         public string Title { get; set; } = null!;

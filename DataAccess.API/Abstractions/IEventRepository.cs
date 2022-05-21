@@ -3,7 +3,8 @@ using DataAccess.API.DTO;
 
 namespace DataAccess.API.Abstractions;
 
-public interface IEventRepository : IRepository<ILibraryEvent>
-{
-    public Task<ILibraryEvent?> GetLatestEventForBookAsync(string bookId);
-}
+public interface ILeaseRepository : IRepository<ILease>
+{ }
+
+public interface IReturnRepository : IRepository<IReturn> 
+{ }

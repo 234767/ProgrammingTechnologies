@@ -9,7 +9,7 @@ internal class LibraryDataContext : DbContext
 {
     private const string DefaultConnectionString =
         @"Data Source=ASUS-KUBA;Initial Catalog=library;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-    
+
     private readonly string _connectionString;
 
     public LibraryDataContext([MaybeNull] string connectionString = default!)
@@ -17,11 +17,11 @@ internal class LibraryDataContext : DbContext
         _connectionString = connectionString ?? DefaultConnectionString;
     }
 
-    internal DbSet<BookInfoDto> BookInfos { get; } = null!;
-    internal DbSet<BookDto> Books { get; } = null!;
-    internal DbSet<LeaseDto> Leases { get; } = null!;
-    internal DbSet<ReturnDto> Returns { get; } = null!;
-    internal DbSet<UserDto> Users { get; } = null!;
+    public DbSet<BookInfoDto> BookInfos { get; set; } = null!;
+    public DbSet<BookDto> Books { get; set; } = null!;
+    public DbSet<LeaseDto> Leases { get; set; } = null!;
+    public DbSet<ReturnDto> Returns { get; set; } = null!;
+    public DbSet<UserDto> Users { get; set; } = null!;
 
     protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
     {
@@ -33,5 +33,6 @@ internal class LibraryDataContext : DbContext
         modelBuilder.Entity<BookDto>().HasOne( book => (BookInfoDto) book.BookInfo );
         modelBuilder.Entity<LeaseDto>().HasOne( lease => (UserDto)lease.Borrower );
         modelBuilder.Entity<LeaseDto>().HasOne( lease => (BookDto)lease.LeasedBook );
+        modelBuilder.Entity<ReturnDto>().HasOne( ret => (LeaseDto)ret.Lease );
     }
 }
