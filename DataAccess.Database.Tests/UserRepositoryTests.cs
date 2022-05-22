@@ -3,17 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Xunit;
 
 namespace DataAccess.Database.Tests;
 
+[Collection("DatabaseTests")]
 public class UserRepositoryTests
 {
-    private IUserRepository _repository;
+    private readonly IUserRepository _repository;
 
     public UserRepositoryTests()
     {
-        _repository = TestingDataProvider.GetEmptyDataContext().Users;
+        _repository = TestingDataProvider.GetEmptyDataContext().GetAwaiter().GetResult().Users;
     }
 
     [Fact]
@@ -28,14 +30,15 @@ public class UserRepositoryTests
     public async Task Create_ShouldNotAddUser_WhenUserWithTheSameIdAlreadyExists()
     {
         const string id = "user_1";
-        var originalUser = new User(id, "A", "B");
+        User originalUser = new(id, "A", "B");
         (await _repository.GetAllAsync()).Count().Should().Be(0);
         await _repository.CreateAsync(originalUser);
         (await _repository.GetAllAsync()).Count().Should().Be(1);
 
-        await _repository.CreateAsync(new User(id, "C", "D"));
+        Func<Task> invalidAddition = () => _repository.CreateAsync(new User(id, "C", "D"));
+        await invalidAddition.Should().ThrowAsync<InvalidOperationException>();
         (await _repository.GetAllAsync()).Count().Should().Be(1);
-        (await _repository.GetAsync(id)).Should().NotBeNull().And.BeSameAs(originalUser);
+        (await _repository.GetAsync(id)).Should().NotBeNull().And.BeEquivalentTo(originalUser);
     }
 
     [Fact]
@@ -46,19 +49,19 @@ public class UserRepositoryTests
         await _repository.CreateAsync(new User("user_3", "ASD", "zxc"));
 
         (await _repository.WhereAsync(user => user.FirstName.Equals("abc", StringComparison.InvariantCultureIgnoreCase)))
-                   .Count()
-                   .Should()
-                   .Be(2);
+            .Count()
+            .Should()
+            .Be(2);
 
         (await _repository.WhereAsync(user => user.FirstName.Contains('A')))
-                   .Count()
-                   .Should()
-                   .Be(2);
+            .Count()
+            .Should()
+            .Be(2);
 
         (await _repository.WhereAsync(user => user.FirstName.Equals("DSA")))
-                   .Count()
-                   .Should()
-                   .Be(0);
+            .Count()
+            .Should()
+            .Be(0);
     }
 
     [Fact]
@@ -69,7 +72,7 @@ public class UserRepositoryTests
         await _repository.CreateAsync(new User(id, "ABC", "DEF"));
         User updatedUser = new User(id, "QWE", "RTY");
         await _repository.UpdateAsync(updatedUser);
-        (await _repository.GetAsync(id)).Should().BeSameAs(updatedUser);
+        (await _repository.GetAsync(id)).Should().BeEquivalentTo(updatedUser);
     }
 
     [Fact]
@@ -84,22 +87,5 @@ public class UserRepositoryTests
         await _repository.DeleteAsync(id);
         (await _repository.GetAllAsync()).Count().Should().Be(2);
         (await _repository.GetAsync(id)).Should().BeNull();
-    }
-
-    [Fact]
-    public async Task GetBooksLeasedBy_ShouldReturnBooks_ThatWereNotReturned()
-    {
-        _repository = TestingDataProvider.GenerateHardCodedData().Users;
-        var leasedBooks = (await _repository.GetBooksLeasedByUserAsync(TestingDataProvider.User2)).ToList();
-        leasedBooks.Count.Should().Be(1);
-        leasedBooks.First().Should().Be(TestingDataProvider.Book2);
-    }
-
-    [Fact]
-    public async Task GetBooksLeasedBy_ShouldNotReturnBooks_ThatWereReturned()
-    {
-        _repository = TestingDataProvider.GenerateHardCodedData().Users;
-        var leasedBooks = (await _repository.GetBooksLeasedByUserAsync(TestingDataProvider.User1)).ToList();
-        leasedBooks.Count.Should().Be(0);
     }
 }

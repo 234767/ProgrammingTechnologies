@@ -4,8 +4,8 @@ namespace DataAccess.Database.Dto
 {
     public class BookDto : IBook
     {
-        public string Id { get; set; } = null!;
+        public string Id { get; init; }
 
-        public IBookInfo BookInfo { get; set; } = null!;
+        public IBookInfo BookInfo { get; set; }
     }
 }

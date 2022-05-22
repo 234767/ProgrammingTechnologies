@@ -7,7 +7,7 @@ public record BookInfo(string Id, string Title, string Author, DateTime? DatePub
 
 public record User(string Id, string FirstName, string Surname) : IUser;
 
-public record Lease(string Id, DateTime Time, IBook LeasedBook, IUser Borrower, TimeSpan Duration) : ILease;
+public record Lease(string Id, DateTime Time, IBook LeasedBook, IUser Borrower, DateTime ReturnDate) : ILease;
 
 public record Return(string Id, ILease Lease, DateTime Time) : IReturn;
 
@@ -18,6 +18,7 @@ public class Book : IBook
         Id = id;
         BookInfo = bookInfo;
     }
+
     public string Id { get; }
     public IBookInfo BookInfo { get; set; }
 }

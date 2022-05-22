@@ -1,70 +1,97 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
+using DataAccess.Database.Repositories;
+using FluentAssertions;
 
 namespace DataAccess.Database.Tests;
 
 public static class TestingDataProvider
 {
-    public static string? ConnectionString = null;
+    private static readonly string? ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ASUSROGG752\source\repos\234767\ProgrammingTechnologies\DataAccess.Database.Tests\TestData.mdf;Integrated Security=True";
     
     public static readonly IUser User1 = new User("user_1", "Steve", "Mason");
     public static readonly IBook Book1 = new Book("book_1_1", new BookInfo("book_1", "Les Miserables", "Victor Hugo", null));
     public static readonly IUser User2 = new User("user_2", "Richard", "Rider");
 
     public static readonly IBook Book2 = new Book("book_2_1",
-                                                  new BookInfo("book_2",
-                                                               "The Catcher in the Rye",
-                                                               "J. D. Salinger",
-                                                               new DateOnly(1951, 06, 16).ToDateTime(new TimeOnly())));
+        new BookInfo("book_2",
+            "The Catcher in the Rye",
+            "J. D. Salinger",
+            new DateOnly(1951, 06, 16).ToDateTime(new TimeOnly())));
 
     public static readonly ILease Lease1 =
-        new Lease("lease_1", DateTime.Parse("02/27/2022 12:00:00"), Book1, User1, TimeSpan.MaxValue);
+        new Lease("lease_1", DateTime.Parse("27/02/2022 12:00:00"), Book1, User1, new DateTime(2020,01,01));
 
     public static readonly IReturn Return1 =
         new Return("return_1", Lease1, DateTime.Parse("03/03/2022 12:00:00"));
 
     public static readonly ILease Lease2 =
-        new Lease("lease_2", DateTime.Parse("04/14/2022 12:00:00"), Book2, User2, TimeSpan.MaxValue);
+        new Lease("lease_2", DateTime.Parse("14/04/2022 12:00:00"), Book2, User2, new DateTime(2020, 01, 01));
 
-    public static (IBookRepository Books, IUserRepository Users, IEventRepository Events) GenerateHardCodedData()
+    public static async Task<(IBookRepository Books, IUserRepository Users, ILeaseRepository Events, IReturnRepository Returns)> GenerateHardCodedData()
     {
-        var context = new DatabaseDataLayerFactory(ConnectionString!);
-        var users = context.CreateUserRepository();
-        var books = context.CreateBookRepository();
-        var events = context.CreateEventRepository();
-        users.CreateAsync(User1);
-        users.CreateAsync(User2);
-        books.CreateAsync(Book1);
-        books.CreateAsync(Book2);
-        events.CreateAsync(Lease1);
-        events.CreateAsync(Return1);
-        events.CreateAsync(Lease2);
-        return ( books, users, events );
+        var (books, users, leases, returns) = await GetEmptyDataContext();
+
+        await users.CreateAsync(User1);
+        await users.CreateAsync(User2);
+        await books.CreateAsync(Book1);
+        await books.CreateAsync(Book2);
+        await leases.CreateAsync(Lease1);
+        await returns.CreateAsync(Return1);
+        await leases.CreateAsync(Lease2);
+        return ( books, users, leases, returns );
     }
 
-    public static (IBookRepository Books, IUserRepository Users, IEventRepository Events) GenerateRandomData()
+    public static async Task<(IBookRepository Books, IUserRepository Users, ILeaseRepository Events, IReturnRepository Returns)> GenerateRandomData()
     {
         User user1 = new User(Guid.NewGuid().ToString(), "", "");
         User user2 = new User(Guid.NewGuid().ToString(), "", "");
-        IBook book = new Random().Next(2) == 1 ? Book1 : Book2;
+        IBook book1 = new Random().Next(2) == 1 ? Book1 : Book2;
 
-        var context = new DatabaseDataLayerFactory(ConnectionString!);
-        var users = context.CreateUserRepository();
-        var books = context.CreateBookRepository();
-        var events = context.CreateEventRepository();
-        users.CreateAsync(user1);
-        users.CreateAsync(user2);
-        books.CreateAsync(book);
-        return ( books, users, events );
+        var (books, users, leases, returns) = await GetEmptyDataContext();
+
+        await users.CreateAsync(user1);
+        await users.CreateAsync(user2);
+        await books.CreateAsync(book1);
+        return ( books, users, leases, returns );
     }
 
-    public static (IBookRepository Books, IUserRepository Users, IEventRepository Events) GetEmptyDataContext()
+    public static async Task<(IBookRepository Books, IUserRepository Users, ILeaseRepository Leases, IReturnRepository Returns)> GetEmptyDataContext()
     {
-        var context = new DatabaseDataLayerFactory(ConnectionString!);
-        var users = context.CreateUserRepository();
-        var books = context.CreateBookRepository();
-        var events = context.CreateEventRepository();
-        return ( books, users, events );
+        DatabaseDataLayerFactory data = new (ConnectionString!);
+        IUserRepository users = data.CreateUserRepository();
+        foreach (IUser user in await users.GetAllAsync())
+        {
+            await users.DeleteAsync(user.Id);
+        }
+
+        IBookRepository books = data.CreateBookRepository();
+        var test = await books.GetAsync( "B1.1" );
+        foreach (IBook book in await books.GetAllAsync())
+        {
+            await books.DeleteAsync(book.Id);
+        }
+
+        ILeaseRepository leases = data.CreateLeaseRepository();
+        foreach (ILease libraryEvent in await leases.GetAllAsync())
+        {
+            await leases.DeleteAsync(libraryEvent.Id);
+        }
+
+        IReturnRepository returns = data.CreateReturnRepository();
+        foreach ( IReturn @return in await returns.GetAllAsync() )
+        {
+            await returns.DeleteAsync(@return.Id);
+        }
+
+        (await users.GetAllAsync()).Count().Should().Be(0);
+        (await books.GetAllAsync()).Count().Should().Be(0);
+        (await leases.GetAllAsync()).Count().Should().Be(0);
+        (await returns.GetAllAsync()).Count().Should().Be(0);
+
+        return ( books, users, leases, returns );
     }
 }

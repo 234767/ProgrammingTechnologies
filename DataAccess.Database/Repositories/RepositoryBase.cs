@@ -51,6 +51,12 @@ namespace DataAccess.Database.Repositories
         public virtual async Task CreateAsync( TAbstraction user )
         {
             ArgumentNullException.ThrowIfNull(user, nameof(user));
+            dynamic _user = user;
+            if ( await dbSet.FindAsync( _user.Id ) is not null )
+            {
+                throw new InvalidOperationException( "Entity with such Id already exists" );
+            }
+
             TDto dto = MapToDto( user );
             await dbSet.AddAsync( dto );
             await SaveChanges();
@@ -97,7 +103,8 @@ namespace DataAccess.Database.Repositories
 
         public async Task<IEnumerable<TAbstraction>> GetAllAsync()
         {
-            return (IEnumerable<TAbstraction>)( await dbSet.ToListAsync() ).Select(MapToResult);
+            var results = await dbSet.ToListAsync();
+            return (IEnumerable<TAbstraction>)results.Select(MapToResult).ToList();
         }
     }
 }

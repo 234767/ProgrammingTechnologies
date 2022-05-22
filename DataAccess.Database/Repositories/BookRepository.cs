@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 using DataAccess.Database.Dto;
@@ -39,32 +37,13 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         return new Book( 
             src.Id, 
             new BookInfo(
-                src.BookInfo.Id,
-                src.BookInfo.Title,
-                src.BookInfo.Author,
-                src.BookInfo.DatePublished
+                src.BookInfo?.Id!,
+                src.BookInfo?.Title!,
+                src.BookInfo?.Author!,
+                src.BookInfo?.DatePublished
             ) 
         );
     }
-
-    #if false
-
-    //todo: delete
-    public override async Task<IBook?> GetAsync(string id)
-    {
-        var dto = new BookDto
-        {
-            Id = "id",
-            BookInfo = new BookInfoDto { Author = "auth", DatePublished = null, Id = "info id", Title = "title" }
-        };
-        var info = Mapper.Map<BookInfo>(
-            new BookInfoDto { Author = "auth", DatePublished = null, Id = "info id", Title = "title" } );
-        var rec = Mapper.Map<IBook, Book>(dto);
-        return await Task.FromResult(rec);
-    }
-
-    #endif
-
 
     public override async Task DeleteAsync( string id )
     {
