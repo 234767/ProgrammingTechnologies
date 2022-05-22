@@ -1,21 +1,23 @@
 using BusinessLogic.Abstractions;
+using BusinessLogic.Abstractions.Models;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
-using IBookInfo = BusinessLogic.Abstractions.IBookInfo;
 
 namespace BusinessLogic;
 
-public class LibraryService : ILibraryService
+public class LibraryService 
 {
     private readonly IUserRepository _users;
     private readonly IBookRepository _books;
-    private readonly IEventRepository _events;
+    private readonly ILeaseRepository _leases;
+    private readonly IReturnRepository _returns;
 
-    public LibraryService(IUserRepository users, IBookRepository books, IEventRepository events)
+    public LibraryService(IUserRepository users, IBookRepository books, ILeaseRepository leases, IReturnRepository returns )
     {
         _users = users;
         _books = books;
-        _events = events;
+        _returns = returns;
+        _leases = leases;
     }
 
     public async Task AddUser(string id, string name, string surname)
@@ -23,29 +25,13 @@ public class LibraryService : ILibraryService
         await _users.CreateAsync(new User(id, name, surname));
     }
 
-    public async Task AddBook(IBookInfo bookInfo)
+    public async Task AddBook(IBookModel book)
     {
-        DataAccess.API.DTO.IBookInfo? info = ( await _books.GetAllBookInfoAsync() )
-            .FirstOrDefault(info => info.Author == bookInfo.Author
-                                    && info.Title == bookInfo.Title
-                                    && info.DatePublished == bookInfo.DateOfIssue);
-        info ??= new BookInfo(Guid.NewGuid().ToString(), bookInfo.Title, bookInfo.Author, bookInfo.DateOfIssue);
-        await _books.CreateAsync(new Book(bookInfo.BookId, info));
+        IBookInfo? bookInfo = (await _books.FindBookInfoAsync( book.Author, book.Title )).FirstOrDefault();
+        bookInfo ??= new BookInfo( Guid.NewGuid().ToString(), book.Title, book.Author, book.DatePublished );
+        await _books.CreateAsync( new Book( new Guid().ToString(), bookInfo ) );
     }
 
-    private record BookInfImpl(string BookId, string Author, string Title, DateOnly? DateOfIssue) : IBookInfo;
-
-    public async Task<IBookInfo?> GetBookInfoById(string bookId)
-    {
-        var book = await _books.GetAsync(bookId);
-
-        if ( book is null )
-        {
-            return null;
-        }
-
-        return new BookInfImpl(bookId, book.BookInfo.Author, book.BookInfo.Title, book.BookInfo.DatePublished);
-    }
 
     public async Task RemoveUser(string userId)
     {
@@ -57,28 +43,60 @@ public class LibraryService : ILibraryService
         await _books.DeleteAsync(bookId);
     }
 
+
+    /// <summary>
+    /// Tries to create new lease of the book with specified <paramref name="bookId"/> to the user with specified <paramref name="userId"/>
+    /// </summary>
+    /// <param name="userId">Id of the user who wants to borrow the book</param>
+    /// <param name="bookId">Id if the book that is to be borrowed</param>
+    /// <returns>
+    /// true if the book was successfully borrowed; false if the book was already borrowed, user did not exist or book did not exist
+    /// </returns>
     public async Task<bool> TryBorrow(string userId, string bookId)
     {
-        ILibraryEvent? lastEvent = await _events.GetLatestEventForBookAsync(bookId);
-        if ( lastEvent is ILease )
+        if (!await IsBookAvailable(bookId))
             return false;
-
 
         IBook? leasedBook = await _books.GetAsync(bookId);
         IUser? borrower = await _users.GetAsync(userId);
         if ( leasedBook is null || borrower is null )
             return false;
 
-        await _events.CreateAsync(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, TimeSpan.MaxValue));
+        // todo: set return date
+        await _leases.CreateAsync(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, new DateTime()));
         return true;
     }
 
+    /// <summary>
+    /// Tries to register a return of a book
+    /// </summary>
+    /// <param name="bookId">Id of the book being returned</param>
+    /// <exception cref="InvalidOperationException"></exception>
     public async Task ReturnBook(string bookId)
     {
-        ILibraryEvent? lastEvent = await _events.GetLatestEventForBookAsync(bookId);
-        if ( lastEvent is not Lease l )
+        ILease? lastEvent = (await _leases.WhereAsync(lease => lease.LeasedBook.Id == bookId)).OrderBy(lease => lease.Time).FirstOrDefault();
+        if ( lastEvent is null )
             throw new InvalidOperationException("Cannot return book when it is not borrowed");
 
-        await _events.CreateAsync(new Return(Guid.NewGuid().ToString(), l, DateTime.Now));
+        if ( await IsBookAvailable(bookId) )
+        {
+            throw new InvalidOperationException( "Book has already been returned" );
+        }
+
+        await _returns.CreateAsync(new Return(Guid.NewGuid().ToString(), lastEvent, DateTime.Now));
+    }
+
+    private async Task<bool> IsBookAvailable( string bookId )
+    {
+        var leases = await _leases.WhereAsync( l => l.LeasedBook.Id == bookId );
+
+        var returns = await _returns.WhereAsync( ret => ret.Lease.LeasedBook.Id == bookId );
+
+        return leases.All( IsReturned );
+
+        bool IsReturned(ILease lease)
+        {
+            return returns.Any( ret => ret.Lease.Id == lease.Id );
+        }
     }
 }

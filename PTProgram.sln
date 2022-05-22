@@ -24,7 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTesting", "DBTesting\DBTesting.csproj", "{C10CA881-FFB6-4BB7-934D-61572A4D16AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBTesting", "DBTesting\DBTesting.csproj", "{C10CA881-FFB6-4BB7-934D-61572A4D16AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Core.Tests", "Presentation.Core.Tests\Presentation.Core.Tests.csproj", "{8432A93B-A90A-426C-861F-E00D147BB25A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,10 @@ Global
 		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8432A93B-A90A-426C-861F-E00D147BB25A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8432A93B-A90A-426C-861F-E00D147BB25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8432A93B-A90A-426C-861F-E00D147BB25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8432A93B-A90A-426C-861F-E00D147BB25A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

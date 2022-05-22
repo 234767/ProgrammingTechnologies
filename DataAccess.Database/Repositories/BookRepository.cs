@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 using DataAccess.Database.Dto;
 using DataAccess.Database.Records;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Database.Repositories;
 
@@ -66,6 +68,18 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
             await SaveChanges();
             await DeleteUnusedInfos();
         }
+    }
+
+    public async Task<IEnumerable<IBookInfo?>> FindBookInfoAsync( string? author, string? title )
+    {
+        if (author is not null && title is not null)
+            return await dbContext.BookInfos.Where( info => info.Author == author && info.Title == title ).ToListAsync();
+        else if (author is not null && title is null)
+            return await dbContext.BookInfos.Where(info => info.Author == author).ToListAsync();
+        else if (author is null && title is not null)
+            return await dbContext.BookInfos.Where(info => info.Title == title).ToListAsync();
+        else 
+            return Enumerable.Empty<IBookInfo>();
     }
 
     private async Task DeleteUnusedInfos()
