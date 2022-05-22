@@ -15,5 +15,9 @@ namespace BusinessLogic.Abstractions.Models
         public string Author { get; set; }
 
         public DateOnly? DatePublished { get; set; }
+
+        public bool IsAvailable { get; }
+
+        public Task DeleteAsync();
     }
 }

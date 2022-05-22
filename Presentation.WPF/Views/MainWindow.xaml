@@ -6,50 +6,16 @@
         xmlns:vm="clr-namespace:Presentation.Core.ViewModels;assembly=Presentation.Core"
         xmlns:local="clr-namespace:Presentation.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-
-    <Window.DataContext>
-        <vm:MainWindowViewModel />
-    </Window.DataContext>
+        Title="MainWindow" MinHeight="600" Height="600" MinWidth="800" Width="800">
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Books" >
-                <MenuItem Header="Add New" />
-                <MenuItem Header="Search" />
-                <MenuItem Header="Check Status" />
-            </MenuItem>
-            <MenuItem Header="Members">
-                <MenuItem Header="Register new" />
-                <MenuItem Header="Search" />
-            </MenuItem>
-            <MenuItem Header="Transactions">
-                <MenuItem Header="Register Lease"/>
-                <MenuItem Header="Register Return"/>
-            </MenuItem>
+            <MenuItem Header="Books" Command="{Binding SelectBooksCommand}" />
+            <MenuItem Header="Users" Command="{Binding SelectUsersCommand}" />
+            <MenuItem Header="Transactions" Command="{Binding SelectTransactionsCommand}"/>
         </Menu>
-        <ToolBarTray IsLocked="True" DockPanel.Dock="Top">
-            <ToolBar Band="0" OverflowMode="Never" >
-                
-                <Button Width="25" Height="25">1</Button>
-                <Button Width="25" Height="25">2</Button>
-            </ToolBar>
-            <ToolBar Band="0">
-                <Button Width="25" Height="25">3</Button>
-                <Button Width="25" Height="25">4</Button>
-                <Separator />
-                <Button ToolBar.OverflowMode="Always" Width="25" Height="25">3</Button>
-                <Button ToolBar.OverflowMode="Always" Width="25" Height="25">4</Button>
-            </ToolBar>
-        </ToolBarTray>
-        <StatusBar DockPanel.Dock="Bottom" Height="30" >
-            <StatusBarItem >
-                <TextBlock > Database status: <TextBlock Text="{Binding Rotation}"></TextBlock></TextBlock>
-            </StatusBarItem>
-        </StatusBar>
-        <Canvas>
-            <ContentControl Content="{Binding SelectedViewModel}"></ContentControl>
-        </Canvas>
+
+        <ContentControl Content="{Binding SelectedViewModel}"></ContentControl>
         
     </DockPanel>
 </Window>

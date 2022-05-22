@@ -9,60 +9,35 @@ namespace Presentation.Core.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        [ObservableProperty]
-        private double progress;
-
-        [ObservableProperty] 
-        private double rotation;
+        private readonly Dictionary<Type, ViewModelBase> subViews = new();
 
         [ObservableProperty]
-        private ViewModelBase selectedViewModel = new BookViewModel();
+        private ViewModelBase _selectedViewModel;
 
-        [ObservableProperty]
-        private List<BookModel> books = new(){
-                                                 new(){Author = "Helo", Title = "Jacek"},
-                                                 new (){Author = "Victor Hugo", Title = "Nedznicy Nedzicy", PublicationYear = 666}
-                                             };
-
-        [ICommand]
-        private async Task OnButtonClick()
+        public MainWindowViewModel( BookViewModel bookViewModel, UsersViewModel usersViewModel )
         {
-            await Task.Delay(2000);
-            Progress = 90;
-        }
-
-        private CancellationTokenSource cts = null!;
-
-        [ICommand]
-        private async Task OnButtonHover()
-        {
-            cts = new();
-            try
-            {
-                await Task.Run(
-                    () =>
-                    {
-                        while ( true )
-                        {
-                            cts.Token.ThrowIfCancellationRequested();
-                            Rotation += 0.0001;
-                            if ( Rotation > 360 )
-                            {
-                                Rotation = 0;
-                            }
-                        }
-                    } );
-            }
-            catch ( TaskCanceledException )
-            {
-                return;
-            }
+            subViews[typeof(BookViewModel)] = bookViewModel;
+            subViews[typeof(UsersViewModel)] = usersViewModel;
+            SelectBooks();
         }
 
         [ICommand]
-        private void OnButtonHoverLeave()
+        private void SelectBooks()
         {
-            cts.Cancel();
+            SelectedViewModel = subViews[typeof(BookViewModel)];
+        }
+
+        [ICommand]
+        private void SelectUsers()
+        {
+            SelectedViewModel = subViews[typeof(UsersViewModel)];
+        }
+
+        [ICommand]
+        private void SelectTransactions()
+        {
+            return;
+            SelectedViewModel = subViews[typeof(LeaseReturnViewModel)];
         }
     }
 }

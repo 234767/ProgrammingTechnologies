@@ -1,11 +1,13 @@
+using System.Linq.Expressions;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Abstractions.Models;
+using BusinessLogic.Models;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 
 namespace BusinessLogic;
 
-public class LibraryService 
+public class LibraryService : ILibraryService
 {
     private readonly IUserRepository _users;
     private readonly IBookRepository _books;
@@ -20,9 +22,41 @@ public class LibraryService
         _leases = leases;
     }
 
-    public async Task AddUser(string id, string name, string surname)
+    public async Task AddUser(IUserModel user)
     {
-        await _users.CreateAsync(new User(id, name, surname));
+        await _users.CreateAsync(new User(user.Id, user.FirstName, user.Surname));
+    }
+
+    public async Task SaveUser(IUserModel user)
+    {
+        await _users.UpdateAsync( new User( user.Id, user.FirstName, user.Surname ) );
+    }
+
+    public async Task<IEnumerable<IUserModel>> SearchUsers( string? name )
+    {
+        IEnumerable<IUser> result;
+        if ( string.IsNullOrWhiteSpace( name ) )
+        {
+            result = ( await _users.GetAllAsync() ).ToList();
+        }
+        else
+        {
+            string[] names = name.Split(' ');
+            string firstName = names[0];
+            string? lastName = names.Length > 1 ? names[1] : null;
+
+            Expression<Func<IUser, bool>> queryExpression = lastName is null
+                ? user => user.FirstName == firstName : (IUser u) => u.FirstName == firstName && u.Surname == lastName;
+
+            result = (await _users.WhereAsync(queryExpression)).ToList();
+        }
+
+        return result.Select( u => new UserModel( this, u.Id, u.FirstName, u.Surname ) );
+    }
+
+    public async Task UpdateUser( IUserModel user )
+    {
+        await _users.UpdateAsync( new User( user.Id, user.FirstName, user.Surname ) );
     }
 
     public async Task AddBook(IBookModel book)

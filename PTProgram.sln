@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic.Tests", "BusinessLogic.Tests\BusinessLogic.Tests.csproj", "{93C3DCE1-58CE-459D-B83B-AFE9302D30D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Avalonia", "Presentation.Avalonia\Presentation.Avalonia.csproj", "{FAE81E77-E205-40E1-95D1-0D4A2C277D32}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Core", "Presentation.Core\Presentation.Core.csproj", "{421D3FFC-4900-49D1-A9CF-A86424A33933}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.WPF", "Presentation.WPF\Presentation.WPF.csproj", "{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}"
@@ -23,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBTesting", "DBTesting\DBTesting.csproj", "{C10CA881-FFB6-4BB7-934D-61572A4D16AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Core.Tests", "Presentation.Core.Tests\Presentation.Core.Tests.csproj", "{8432A93B-A90A-426C-861F-E00D147BB25A}"
 EndProject
@@ -54,10 +50,6 @@ Global
 		{93C3DCE1-58CE-459D-B83B-AFE9302D30D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93C3DCE1-58CE-459D-B83B-AFE9302D30D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93C3DCE1-58CE-459D-B83B-AFE9302D30D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAE81E77-E205-40E1-95D1-0D4A2C277D32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAE81E77-E205-40E1-95D1-0D4A2C277D32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAE81E77-E205-40E1-95D1-0D4A2C277D32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAE81E77-E205-40E1-95D1-0D4A2C277D32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{421D3FFC-4900-49D1-A9CF-A86424A33933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{421D3FFC-4900-49D1-A9CF-A86424A33933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{421D3FFC-4900-49D1-A9CF-A86424A33933}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,10 +58,6 @@ Global
 		{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E44C0343-0D2E-45A7-BF51-3BC32B1450A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C10CA881-FFB6-4BB7-934D-61572A4D16AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8432A93B-A90A-426C-861F-E00D147BB25A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8432A93B-A90A-426C-861F-E00D147BB25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8432A93B-A90A-426C-861F-E00D147BB25A}.Release|Any CPU.ActiveCfg = Release|Any CPU

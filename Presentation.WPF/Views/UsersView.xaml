@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Presentation.WPF.Views.UsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Presentation.WPF.Views"
+             xmlns:vm="clr-namespace:Presentation.Core.ViewModels;assembly=Presentation.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <DockPanel Margin="20">
+        <TextBlock FontSize="24" DockPanel.Dock="Top" Margin="0,0,0,10">Users</TextBlock>
+        <Grid VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="User Details">
+                <ContentControl Content="{Binding ActiveUser}"></ContentControl>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Header="All Users">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Label FontWeight="Bold">Search:</Label>
+                        <TextBox Width="250" Margin="10,0" Text="{Binding SearchString}"></TextBox>
+                        <Button Padding="10,0" Command="{Binding ExecuteSearchCommand}">Search</Button>
+                    </StackPanel>
+                    <ListView Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,5" ItemsSource="{Binding UserSearchResults}" SelectedIndex="{Binding SelectedUser}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Id" Width="100" DisplayMemberBinding="{Binding Id}"/>
+                                <GridViewColumn Header="First name" Width="200"  DisplayMemberBinding="{Binding FirstName}"/>
+                                <GridViewColumn Header="Surname" Width="200"  DisplayMemberBinding="{Binding Surname}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Grid.Row="2" HorizontalAlignment="Right" Padding="20,1" Command="{Binding DeleteUserCommand}">Delete</Button>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</UserControl>
