@@ -22,7 +22,7 @@ namespace Presentation.Core.Models
 
         public string Surname { get; set; } = string.Empty;
 
-        public async Task Crete()
+        public async Task Create()
         {
             await Library.AddUser(this);
         }
