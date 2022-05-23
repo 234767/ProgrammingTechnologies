@@ -1,4 +1,5 @@
-﻿using DataAccess.API.DTO;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using DataAccess.API.DTO;
 
 namespace DataAccess.Database.Dto
 {
@@ -6,6 +7,9 @@ namespace DataAccess.Database.Dto
     {
         public string Id { get; init; }
 
-        public IBookInfo BookInfo { get; set; }
+        [ForeignKey(nameof(BookInfo))]
+        public string BookInfoId { get; set; }
+
+        public virtual IBookInfo BookInfo { get; set; }
     }
 }

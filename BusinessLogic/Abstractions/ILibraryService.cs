@@ -29,4 +29,7 @@ public interface ILibraryService
     Task ReturnBook(string bookId);
 
     Task<IEnumerable<IUserModel>> SearchUsers( string? name );
+    Task<IEnumerable<IBookModel>> SearchBooks( string property, string? name );
+    Task SaveBook( IBookModel bookModel );
+    Task<bool> IsBookAvailable( string id );
 }

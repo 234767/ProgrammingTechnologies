@@ -24,7 +24,7 @@ public class LibraryService : ILibraryService
 
     public async Task AddUser(IUserModel user)
     {
-        await _users.CreateAsync(new User(user.Id, user.FirstName, user.Surname));
+        await _users.CreateAsync(new User(GenerateId(), user.FirstName, user.Surname));
     }
 
     public async Task SaveUser(IUserModel user)
@@ -46,7 +46,7 @@ public class LibraryService : ILibraryService
             string? lastName = names.Length > 1 ? names[1] : null;
 
             Expression<Func<IUser, bool>> queryExpression = lastName is null
-                ? user => user.FirstName == firstName : (IUser u) => u.FirstName == firstName && u.Surname == lastName;
+                ? user => user.FirstName == firstName : u => u.FirstName == firstName && u.Surname == lastName;
 
             result = (await _users.WhereAsync(queryExpression)).ToList();
         }
@@ -63,9 +63,52 @@ public class LibraryService : ILibraryService
     {
         IBookInfo? bookInfo = (await _books.FindBookInfoAsync( book.Author, book.Title )).FirstOrDefault();
         bookInfo ??= new BookInfo( Guid.NewGuid().ToString(), book.Title, book.Author, book.DatePublished );
-        await _books.CreateAsync( new Book( new Guid().ToString(), bookInfo ) );
+        await _books.CreateAsync( new Book( GenerateId(), bookInfo ) );
     }
 
+    public async Task<IEnumerable<IBookModel>> SearchBooks( string property, string? name )
+    {
+        IEnumerable<IBook> results;
+        if ( string.IsNullOrWhiteSpace( name ) )
+        {
+            results = await _books.GetAllAsync();
+        }
+        else
+        {
+            results = property.ToLower() switch
+            {
+                "title"  => ( await _books.WhereAsync( b => b.BookInfo.Title == name ) ).ToList(),
+                "author" => ( await _books.WhereAsync( b => b.BookInfo.Author == name ) ).ToList(),
+                _        => throw new InvalidOperationException( "Books have to be searched either by Title or Author" )
+            };
+        }
+
+        List<BookModel> returnValue = new();
+        foreach ( IBook book in results )
+        {
+            returnValue.Add(
+                new BookModel(
+                    this,
+                    book.Id,
+                    book.BookInfo.Title,
+                    book.BookInfo.Author,
+                    book.BookInfo.DatePublished is null
+                        ? null
+                        : DateOnly.FromDateTime( book.BookInfo.DatePublished.Value ),
+                    await IsBookAvailable( book.Id ) ) );
+        }
+
+        return returnValue;
+    }
+
+    public async Task SaveBook( IBookModel bookModel )
+    {
+        // todo: fix BookInfoId
+        await _books.UpdateAsync(
+            new Book(
+                GenerateId(),
+                new BookInfo( bookModel.Id, bookModel.Title, bookModel.Author, bookModel.DatePublished ) ) );
+    }
 
     public async Task RemoveUser(string userId)
     {
@@ -97,7 +140,7 @@ public class LibraryService : ILibraryService
             return false;
 
         // todo: set return date
-        await _leases.CreateAsync(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, new DateTime()));
+        await _leases.CreateAsync(new Lease(GenerateId(), DateTime.Now, leasedBook, borrower, new DateTime()));
         return true;
     }
 
@@ -120,17 +163,29 @@ public class LibraryService : ILibraryService
         await _returns.CreateAsync(new Return(Guid.NewGuid().ToString(), lastEvent, DateTime.Now));
     }
 
-    private async Task<bool> IsBookAvailable( string bookId )
+    public async Task<bool> IsBookAvailable( string bookId )
     {
-        var leases = await _leases.WhereAsync( l => l.LeasedBook.Id == bookId );
+        //return true;
 
-        var returns = await _returns.WhereAsync( ret => ret.Lease.LeasedBook.Id == bookId );
+        var leases = ( await _leases.WhereAsync( l => l.LeasedBook.Id == bookId ) ).ToList();
 
-        return leases.All( IsReturned );
+        if ( leases.Count == 0 )
+            return true;
 
-        bool IsReturned(ILease lease)
+        foreach ( ILease lease in leases )
         {
-            return returns.Any( ret => ret.Lease.Id == lease.Id );
+            if ( !await IsLeaseReturned( lease ) )
+                return false;
         }
+
+        return true;
     }
+
+    public async Task<bool> IsLeaseReturned(ILease lease)
+    {
+        var returns = (await _returns.WhereAsync(ret => ret.Lease.Id == lease.Id)).ToList();
+        return returns.Any(ret => ret.Lease.Id == lease.Id);
+    }
+
+    private string GenerateId() => Guid.NewGuid().ToString()[..8];
 }

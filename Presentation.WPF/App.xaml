@@ -6,13 +6,16 @@
              xmlns:local="clr-namespace:Presentation.WPF"
              Startup="OnStartup">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type viewmodels:BookViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:BooksViewModel}">
              <views:BookView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:BookEditViewModel}">
+            <views:BookEditView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:UsersViewModel}">
             <views:UsersView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:UserViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:UserEditViewModel}">
             <views:UserEditView />
         </DataTemplate>
     </Application.Resources>

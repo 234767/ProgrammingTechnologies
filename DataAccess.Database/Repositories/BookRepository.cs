@@ -31,6 +31,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         };
     }
 
+    protected override IQueryable<BookDto> LoadRelations( IQueryable<BookDto> data )
+    {
+        return data.Include( b => b.BookInfo );
+    }
+
     protected override Book? MapToResult( IBook? src )
     {
         if ( src is null )
@@ -47,6 +52,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         );
     }
 
+    public override async Task<IBook?> GetAsync( string id )
+    {
+        return MapToResult( await LoadRelations( dbSet ).SingleOrDefaultAsync( b => b.Id == id ) );
+    }
+
     public override async Task DeleteAsync( string id )
     {
         await base.DeleteAsync( id );
@@ -55,7 +65,7 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
 
     public override async Task UpdateAsync( IBook item )
     {
-        BookDto? book = await dbSet.FindAsync( item.Id );
+        BookDto? book = await dbSet.FindAsync( item );
         if ( book is not null )
         {
             book.BookInfo = (await dbContext.BookInfos.FindAsync(item.BookInfo.Id)) ?? new BookInfoDto()
@@ -93,5 +103,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         }
 
         await SaveChanges();
+    }
+
+    public override async Task<IEnumerable<IBook>> GetAllAsync()
+    {
+        var results = await dbSet.Include( b => b.BookInfo ).ToListAsync();
+        return (IEnumerable<IBook>)results.Select(MapToResult).ToList();
     }
 }

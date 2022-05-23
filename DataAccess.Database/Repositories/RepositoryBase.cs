@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess.API.Abstractions;
+using DataAccess.API.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Database.Repositories
@@ -48,11 +49,26 @@ namespace DataAccess.Database.Repositories
             } while (saveFailed);
         }
 
+        protected virtual IQueryable<TDto> LoadRelations(IQueryable<TDto> data)
+        {
+            return data;
+        }
+
         public virtual async Task CreateAsync( TAbstraction user )
         {
             ArgumentNullException.ThrowIfNull(user, nameof(user));
-            dynamic _user = user;
-            if ( await dbSet.FindAsync( _user.Id ) is not null )
+
+            string id = user switch
+            {
+                IUser u   => u.Id,
+                IBook b   => b.Id,
+                ILease l  => l.Id,
+                IReturn r => r.Id,
+                _         => throw new InvalidOperationException( $"Cannot have repository of type {user.GetType()}" )
+            };
+
+            TDto? existingUser = await dbSet.FindAsync( id );
+            if ( existingUser is not null )
             {
                 throw new InvalidOperationException( "Entity with such Id already exists" );
             }
@@ -72,12 +88,12 @@ namespace DataAccess.Database.Repositories
             IEnumerable<TAbstraction> result;
             try
             {
-                result = await dbSet.AsNoTracking().Where(predicate).ToListAsync();
+                result = await LoadRelations(dbSet).AsNoTracking().Where(predicate).ToListAsync();
             }
             catch ( InvalidOperationException )
             {
                 // Could not convert Linq to SQL
-                result = ( await dbSet.ToListAsync() ).Where( predicate.Compile() );
+                result = ( await LoadRelations(dbSet).ToListAsync() ).Where( predicate.Compile() );
             }
 
             return (IEnumerable<TAbstraction>)result.Select( MapToResult );
@@ -101,9 +117,9 @@ namespace DataAccess.Database.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<TAbstraction>> GetAllAsync()
+        public virtual async Task<IEnumerable<TAbstraction>> GetAllAsync()
         {
-            var results = await dbSet.ToListAsync();
+            var results = await LoadRelations(dbSet).ToListAsync();
             return (IEnumerable<TAbstraction>)results.Select(MapToResult).ToList();
         }
     }

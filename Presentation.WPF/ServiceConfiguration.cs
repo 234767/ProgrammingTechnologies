@@ -20,14 +20,15 @@ namespace Presentation.WPF
             });
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<IBookModel, BookModel>();
-            services.AddTransient<BookViewModel>();
+            services.AddTransient<BooksViewModel>();
             services.AddTransient<BookView>(s => new BookView()
             {
-                DataContext = s.GetRequiredService<BookViewModel>()
+                DataContext = s.GetRequiredService<BooksViewModel>()
             });
             services.AddSingleton<UsersViewModel>();
             services.AddSingleton<ILibraryService, LibraryService>();
             services.AddSingleton<UserCollectionModel>();
+            services.AddSingleton<BookCollectionModel>();
 
             var data = new DatabaseDataLayerFactory();
             services.AddSingleton<IUserRepository>( data.CreateUserRepository() );

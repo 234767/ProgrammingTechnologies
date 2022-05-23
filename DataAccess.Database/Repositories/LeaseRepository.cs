@@ -1,16 +1,28 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 using DataAccess.Database.Dto;
 using DataAccess.Database.Records;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Database.Repositories
 {
     internal class LeaseRepository : RepositoryBase<ILease, LeaseDto, Lease>, ILeaseRepository
     {
         public LeaseRepository( LibraryDataContext dbContext ) : base( dbContext.Leases, dbContext ) { }
+
+        protected override IQueryable<LeaseDto> LoadRelations( IQueryable<LeaseDto> data )
+        {
+            return data.Include( l => l.Borrower ).Include( l => l.LeasedBook ).ThenInclude( b => b.BookInfo );
+        }
+
+        public override async Task<ILease?> GetAsync( string id )
+        {
+            return MapToResult(await LoadRelations( dbSet.Where(l => l.Id == id) ).SingleOrDefaultAsync());
+        }
 
         protected override LeaseDto? MapToDto( ILease? src )
         {

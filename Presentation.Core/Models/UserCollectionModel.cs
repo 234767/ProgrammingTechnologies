@@ -20,5 +20,10 @@ namespace Presentation.Core.Models
         {
             return (await _library.SearchUsers( name )).ToList();
         }
+
+        public UserModel GetNewUser()
+        {
+            return new UserModel( _library );
+        }
     }
 }
