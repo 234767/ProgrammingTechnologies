@@ -28,11 +28,12 @@ internal class LibraryDataContext : DbContext
         optionsBuilder.UseSqlServer(_connectionString );
     }
 
-    protected override void OnModelCreating( ModelBuilder modelBuilder )
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BookDto>().HasOne( book => (BookInfoDto) book.BookInfo );
-        modelBuilder.Entity<LeaseDto>().HasOne( lease => (UserDto)lease.Borrower );
-        modelBuilder.Entity<LeaseDto>().HasOne( lease => (BookDto)lease.LeasedBook );
-        modelBuilder.Entity<ReturnDto>().HasOne( ret => (LeaseDto)ret.Lease );
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<BookDto>().HasOne(book => (BookInfoDto)book.BookInfo);
+        modelBuilder.Entity<LeaseDto>().HasOne(lease => (UserDto)lease.Borrower);
+        modelBuilder.Entity<LeaseDto>().HasOne(lease => (BookDto)lease.LeasedBook);
+        modelBuilder.Entity<ReturnDto>().HasOne(ret => (LeaseDto)ret.Lease);
     }
 }

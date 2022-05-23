@@ -49,6 +49,11 @@ namespace DataAccess.Database.Repositories
             } while (saveFailed);
         }
 
+        protected virtual IQueryable<TDto> LoadRelations(IQueryable<TDto> data)
+        {
+            return data;
+        }
+
         public virtual async Task CreateAsync( TAbstraction user )
         {
             ArgumentNullException.ThrowIfNull(user, nameof(user));
@@ -83,12 +88,12 @@ namespace DataAccess.Database.Repositories
             IEnumerable<TAbstraction> result;
             try
             {
-                result = await dbSet.AsNoTracking().Where(predicate).ToListAsync();
+                result = await LoadRelations(dbSet).AsNoTracking().Where(predicate).ToListAsync();
             }
             catch ( InvalidOperationException )
             {
                 // Could not convert Linq to SQL
-                result = ( await dbSet.ToListAsync() ).Where( predicate.Compile() );
+                result = ( await LoadRelations(dbSet).ToListAsync() ).Where( predicate.Compile() );
             }
 
             return (IEnumerable<TAbstraction>)result.Select( MapToResult );
@@ -112,9 +117,9 @@ namespace DataAccess.Database.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<TAbstraction>> GetAllAsync()
+        public virtual async Task<IEnumerable<TAbstraction>> GetAllAsync()
         {
-            var results = await dbSet.ToListAsync();
+            var results = await LoadRelations(dbSet).ToListAsync();
             return (IEnumerable<TAbstraction>)results.Select(MapToResult).ToList();
         }
     }

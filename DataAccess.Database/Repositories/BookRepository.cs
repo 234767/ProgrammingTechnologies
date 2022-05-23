@@ -31,6 +31,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         };
     }
 
+    protected override IQueryable<BookDto> LoadRelations( IQueryable<BookDto> data )
+    {
+        return data.Include( b => b.BookInfo );
+    }
+
     protected override Book? MapToResult( IBook? src )
     {
         if ( src is null )
@@ -45,6 +50,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
                 src.BookInfo?.DatePublished
             ) 
         );
+    }
+
+    public override async Task<IBook?> GetAsync( string id )
+    {
+        return MapToResult( await LoadRelations( dbSet ).SingleOrDefaultAsync( b => b.Id == id ) );
     }
 
     public override async Task DeleteAsync( string id )
@@ -93,5 +103,11 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
         }
 
         await SaveChanges();
+    }
+
+    public override async Task<IEnumerable<IBook>> GetAllAsync()
+    {
+        var results = await dbSet.Include( b => b.BookInfo ).ToListAsync();
+        return (IEnumerable<IBook>)results.Select(MapToResult).ToList();
     }
 }

@@ -16,6 +16,20 @@ namespace DataAccess.Database.Repositories
     {
         public ReturnRepository( LibraryDataContext dbContext ) : base( dbContext.Returns, dbContext ) { }
 
+        protected override IQueryable<ReturnDto> LoadRelations( IQueryable<ReturnDto> data )
+        {
+            return data.Include( r => r.Lease )
+                       .ThenInclude( l => l.Borrower )
+                       .Include( r => r.Lease )
+                       .ThenInclude( l => l.LeasedBook )
+                       .ThenInclude( b => b.BookInfo );
+        }
+
+        public override async Task<IReturn?> GetAsync( string id )
+        {
+            return MapToResult( await LoadRelations( dbSet.Where( r => r.Id == id ) ).FirstOrDefaultAsync() );
+        }
+
         protected override ReturnDto? MapToDto( IReturn? src )
         {
             if (src is null)
