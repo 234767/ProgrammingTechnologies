@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess.API.Abstractions;
+using DataAccess.API.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Database.Repositories
@@ -51,8 +52,18 @@ namespace DataAccess.Database.Repositories
         public virtual async Task CreateAsync( TAbstraction user )
         {
             ArgumentNullException.ThrowIfNull(user, nameof(user));
-            dynamic _user = user;
-            if ( await dbSet.FindAsync( _user.Id ) is not null )
+
+            string id = user switch
+            {
+                IUser u   => u.Id,
+                IBook b   => b.Id,
+                ILease l  => l.Id,
+                IReturn r => r.Id,
+                _         => throw new InvalidOperationException( $"Cannot have repository of type {user.GetType()}" )
+            };
+
+            TDto? existingUser = await dbSet.FindAsync( id );
+            if ( existingUser is not null )
             {
                 throw new InvalidOperationException( "Entity with such Id already exists" );
             }

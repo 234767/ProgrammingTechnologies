@@ -12,7 +12,7 @@
         <DataTemplate DataType="{x:Type viewmodels:UsersViewModel}">
             <views:UsersView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:UserViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:UserEditViewModel}">
             <views:UserEditView />
         </DataTemplate>
     </Application.Resources>

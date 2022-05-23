@@ -24,7 +24,7 @@ public class LibraryService : ILibraryService
 
     public async Task AddUser(IUserModel user)
     {
-        await _users.CreateAsync(new User(user.Id, user.FirstName, user.Surname));
+        await _users.CreateAsync(new User(GenerateId(), user.FirstName, user.Surname));
     }
 
     public async Task SaveUser(IUserModel user)
@@ -63,7 +63,7 @@ public class LibraryService : ILibraryService
     {
         IBookInfo? bookInfo = (await _books.FindBookInfoAsync( book.Author, book.Title )).FirstOrDefault();
         bookInfo ??= new BookInfo( Guid.NewGuid().ToString(), book.Title, book.Author, book.DatePublished );
-        await _books.CreateAsync( new Book( new Guid().ToString(), bookInfo ) );
+        await _books.CreateAsync( new Book( GenerateId(), bookInfo ) );
     }
 
 
@@ -97,7 +97,7 @@ public class LibraryService : ILibraryService
             return false;
 
         // todo: set return date
-        await _leases.CreateAsync(new Lease(Guid.NewGuid().ToString(), DateTime.Now, leasedBook, borrower, new DateTime()));
+        await _leases.CreateAsync(new Lease(GenerateId(), DateTime.Now, leasedBook, borrower, new DateTime()));
         return true;
     }
 
@@ -133,4 +133,6 @@ public class LibraryService : ILibraryService
             return returns.Any( ret => ret.Lease.Id == lease.Id );
         }
     }
+
+    private string GenerateId() => Guid.NewGuid().ToString()[..8];
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using BusinessLogic.Abstractions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,16 +13,13 @@ namespace Presentation.Core.ViewModels
         public UsersViewModel(UserCollectionModel users)
         {
             _users = users;
+            _activeUser = new UserEditViewModel(_users.GetNewUser());
+            _ = ExecuteSearch();
         }
 
         [ObservableProperty]
-        UserViewModel _activeUser = new (new UserModel(null)
-        {
-            Id = "user id 1",
-            FirstName = "Imie",
-            Surname = "Nazwisko"
-        });
-
+        UserEditViewModel _activeUser;
+        
         [ObservableProperty] 
         private ObservableCollection<IUserModel> _userSearchResults = new(Enumerable.Empty<IUserModel>());
 
@@ -39,10 +35,10 @@ namespace Presentation.Core.ViewModels
             set
             {
                 _selectedUser = value;
-                OnPropertyChanged(nameof(SelectedUser));
+                OnPropertyChanged();
                 try
                 {
-                    _activeUser = new UserViewModel( UserSearchResults[value] );
+                    _activeUser = new UserEditViewModel( UserSearchResults[value] );
                     OnPropertyChanged( nameof(ActiveUser) );
                 }
                 catch ( ArgumentOutOfRangeException ) { }

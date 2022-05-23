@@ -6,17 +6,17 @@ using Presentation.Core.Models;
 
 namespace Presentation.Core.ViewModels;
 
-public partial class UserViewModel : ViewModelBase
+public partial class UserEditViewModel : ViewModelBase
 {
     [ObservableProperty] 
     [AlsoNotifyChangeFor(nameof(Id))]
-    [AlsoNotifyChangeFor(nameof(Id))]
-    [AlsoNotifyChangeFor(nameof(Id))]
+    [AlsoNotifyChangeFor(nameof(FirstName))]
+    [AlsoNotifyChangeFor(nameof(Surname))]
     private IUserModel _user;
 
     private bool _newUser = false;
 
-    public UserViewModel( IUserModel user )
+    public UserEditViewModel( IUserModel user )
     {
         _user = user;
     }
@@ -29,7 +29,7 @@ public partial class UserViewModel : ViewModelBase
         set
         {
             _user.Id = value;
-            OnPropertyChanged(nameof(Id));
+            OnPropertyChanged();
         }
     }
 
@@ -39,7 +39,7 @@ public partial class UserViewModel : ViewModelBase
         set
         {
             _user.FirstName = value;
-            OnPropertyChanged(nameof(FirstName));
+            OnPropertyChanged();
         }
     }
 
@@ -49,7 +49,7 @@ public partial class UserViewModel : ViewModelBase
         set
         {
             _user.Surname = value;
-            OnPropertyChanged(nameof(Surname));
+            OnPropertyChanged();
         }
     }
 
@@ -77,11 +77,5 @@ public partial class UserViewModel : ViewModelBase
         OnPropertyChanged(nameof(Id));
         OnPropertyChanged(nameof(FirstName));
         OnPropertyChanged(nameof(Surname));
-    }
-
-    [ICommand]
-    private async Task Delete()
-    {
-        await _user.Delete();
     }
 }
