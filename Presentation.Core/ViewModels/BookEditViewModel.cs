@@ -69,6 +69,12 @@ public partial class BookEditViewModel : ViewModelBase
     }
 
     [ICommand]
+    private void ClearDate()
+    {
+        PublicationDate = null;
+    }
+
+    [ICommand]
     private void NewBook()
     {
         _newBook = true;

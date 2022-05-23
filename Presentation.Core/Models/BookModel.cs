@@ -6,23 +6,32 @@ namespace Presentation.Core.Models;
 
 public class BookModel : IBookModel
 {
-    private readonly ILibraryService _libraryService;
+    public ILibraryService Library { get; }
 
     public BookModel( ILibraryService libraryService )
     {
-        _libraryService = libraryService;
+        Library = libraryService;
     }
 
-    public string Id { get; set; }
-    public string Title { get; set; } = null!;
-    public string Author { get; set; } = null!;
+    public string Id { get; set; } = null!;
+    public string Title { get; set; } = string.Empty;
+    public string Author { get; set; } = string.Empty;
     public DateOnly? DatePublished { get; set; }
 
-    // Todo
     public bool IsAvailable => true;
 
     public async Task DeleteAsync()
     {
-        await _libraryService.RemoveBook(Id);
+        await Library.RemoveBook(Id);
+    }
+
+    public async Task Create()
+    {
+        await Library.AddBook(this);
+    }
+
+    public async Task Save()
+    {
+        await Library.SaveBook(this);
     }
 }

@@ -14,9 +14,9 @@ namespace Presentation.Core.ViewModels
         [ObservableProperty]
         private ViewModelBase _selectedViewModel;
 
-        public MainWindowViewModel( BookViewModel bookViewModel, UsersViewModel usersViewModel )
+        public MainWindowViewModel( BooksViewModel booksViewModel, UsersViewModel usersViewModel )
         {
-            subViews[typeof(BookViewModel)] = bookViewModel;
+            subViews[typeof(BooksViewModel)] = booksViewModel;
             subViews[typeof(UsersViewModel)] = usersViewModel;
             SelectBooks();
         }
@@ -24,7 +24,7 @@ namespace Presentation.Core.ViewModels
         [ICommand]
         private void SelectBooks()
         {
-            SelectedViewModel = subViews[typeof(BookViewModel)];
+            SelectedViewModel = subViews[typeof(BooksViewModel)];
         }
 
         [ICommand]

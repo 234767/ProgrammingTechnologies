@@ -15,7 +15,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <GroupBox Header="Book Details">
-                
+                <ContentControl Content="{Binding ActiveBook}" />
             </GroupBox>
             <GroupBox Grid.Row="1" Header="All Books">
                 <Grid>
@@ -31,7 +31,7 @@
                             <ComboBoxItem>Author</ComboBoxItem>
                         </ComboBox>
                         <TextBox Width="250" Margin="10,0"></TextBox>
-                        <Button Padding="10,0"> Search </Button>
+                        <Button Padding="10,0" Command="{Binding ExecuteSearchCommand}"> Search </Button>
                     </StackPanel>
                     <ListView Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,5" ItemsSource="{Binding BookSearchResults}" SelectedIndex="{Binding SelectedBook}">
                         <ListView.View>
@@ -43,7 +43,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button Grid.Row="2" HorizontalAlignment="Right" Padding="20,1">Delete</Button>
+                    <Button Grid.Row="2" HorizontalAlignment="Right" Padding="20,1" Command="{Binding DeleteBookCommand}">Delete</Button>
                 </Grid>
             </GroupBox>
         </Grid>

@@ -17,8 +17,8 @@ namespace Presentation.Core.ViewModels
             _ = ExecuteSearch();
         }
 
-        [ObservableProperty]
-        UserEditViewModel _activeUser;
+        [ObservableProperty] 
+        private UserEditViewModel _activeUser;
         
         [ObservableProperty] 
         private ObservableCollection<IUserModel> _userSearchResults = new(Enumerable.Empty<IUserModel>());

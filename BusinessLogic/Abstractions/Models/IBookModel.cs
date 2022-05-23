@@ -8,6 +8,8 @@ namespace BusinessLogic.Abstractions.Models
 {
     public interface IBookModel
     {
+        public ILibraryService Library { get; }
+
         public string Id { get; set; }
 
         public string Title { get; set; }
@@ -19,5 +21,7 @@ namespace BusinessLogic.Abstractions.Models
         public bool IsAvailable { get; }
 
         public Task DeleteAsync();
+        public Task Create();
+        public Task Save();
     }
 }
