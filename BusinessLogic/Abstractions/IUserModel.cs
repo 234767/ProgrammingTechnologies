@@ -5,7 +5,7 @@ public interface IUserModel
     string Id { get; set; }
     string FirstName { get; set; }
     string Surname { get; set; }
-    Task Crete();
+    Task Create();
     Task Save();
     Task Delete();
 }

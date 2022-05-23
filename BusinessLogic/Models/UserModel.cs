@@ -18,7 +18,7 @@ internal class UserModel : IUserModel
     public string FirstName { get; set; }
     public string Surname { get; set; }
 
-    public async Task Crete()
+    public async Task Create()
     {
         await Library.AddUser( this );
     }

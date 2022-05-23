@@ -60,7 +60,7 @@ public partial class UserEditViewModel : ViewModelBase
     {
         if ( _newUser )
         {
-            await _user.Crete();
+            await _user.Create();
             _newUser = false;
         }
         else
