@@ -14,10 +14,11 @@ namespace Presentation.Core.ViewModels
         [ObservableProperty]
         private ViewModelBase _selectedViewModel;
 
-        public MainWindowViewModel( BooksViewModel booksViewModel, UsersViewModel usersViewModel )
+        public MainWindowViewModel( BooksViewModel booksViewModel, UsersViewModel usersViewModel, LeaseCollectionViewModel leasesViewModel)
         {
             subViews[typeof(BooksViewModel)] = booksViewModel;
             subViews[typeof(UsersViewModel)] = usersViewModel;
+            subViews[typeof(LeaseCollectionViewModel)] = leasesViewModel;
             SelectBooks();
         }
 
@@ -36,8 +37,7 @@ namespace Presentation.Core.ViewModels
         [ICommand]
         private void SelectTransactions()
         {
-            return;
-            SelectedViewModel = subViews[typeof(LeaseReturnViewModel)];
+            SelectedViewModel = subViews[typeof(LeaseCollectionViewModel)];
         }
     }
 }

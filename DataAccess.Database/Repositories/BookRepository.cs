@@ -65,7 +65,7 @@ internal class BookRepository : RepositoryBase<IBook, BookDto, Book>, IBookRepos
 
     public override async Task UpdateAsync( IBook item )
     {
-        BookDto? book = await dbSet.FindAsync( item );
+        BookDto? book = await dbSet.FindAsync( item.Id );
         if ( book is not null )
         {
             book.BookInfo = (await dbContext.BookInfos.FindAsync(item.BookInfo.Id)) ?? new BookInfoDto()

@@ -6,7 +6,6 @@ using DataAccess.Database;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Core.Models;
 using Presentation.Core.ViewModels;
-using Presentation.WPF.Views;
 
 namespace Presentation.WPF
 {
@@ -21,14 +20,16 @@ namespace Presentation.WPF
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<IBookModel, BookModel>();
             services.AddTransient<BooksViewModel>();
-            services.AddTransient<BookView>(s => new BookView()
-            {
-                DataContext = s.GetRequiredService<BooksViewModel>()
-            });
+            //services.AddTransient<BookView>(s => new BookView()
+            //{
+            //    DataContext = s.GetRequiredService<BooksViewModel>()
+            //});
             services.AddSingleton<UsersViewModel>();
             services.AddSingleton<ILibraryService, LibraryService>();
             services.AddSingleton<UserCollectionModel>();
             services.AddSingleton<BookCollectionModel>();
+            services.AddSingleton<LeaseCollectionViewModel>();
+            services.AddSingleton<LeaseCollectionModel>();
 
             var data = new DatabaseDataLayerFactory();
             services.AddSingleton<IUserRepository>( data.CreateUserRepository() );

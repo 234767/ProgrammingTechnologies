@@ -1,16 +1,18 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.API.Abstractions;
 using DataAccess.API.DTO;
 using DataAccess.Database.Repositories;
 using FluentAssertions;
+using Xunit;
 
 namespace DataAccess.Database.Tests;
 
 public static class TestingDataProvider
 {
-    private static readonly string? ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ASUSROGG752\source\repos\234767\ProgrammingTechnologies\DataAccess.Database.Tests\TestData.mdf;Integrated Security=True";
+    
     
     public static readonly IUser User1 = new User("user_1", "Steve", "Mason");
     public static readonly IBook Book1 = new Book("book_1_1", new BookInfo("book_1", "Les Miserables", "Victor Hugo", null));
@@ -61,7 +63,13 @@ public static class TestingDataProvider
 
     public static async Task<(IBookRepository Books, IUserRepository Users, ILeaseRepository Leases, IReturnRepository Returns)> GetEmptyDataContext()
     {
-        DatabaseDataLayerFactory data = new (ConnectionString!);
+        const string dbRelativePath = @"..\..\..\TestData.mdf";
+        string dbAbsolutePath = Path.Combine( Environment.CurrentDirectory, dbRelativePath );
+        new FileInfo( dbAbsolutePath ).Exists.Should().BeTrue($"File {dbAbsolutePath} should exist for tests");
+
+        string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbAbsolutePath};Integrated Security=True";
+
+        DatabaseDataLayerFactory data = new (connectionString);
         IUserRepository users = data.CreateUserRepository();
         foreach (IUser user in await users.GetAllAsync())
         {

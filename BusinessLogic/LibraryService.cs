@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq.Expressions;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Abstractions.Models;
@@ -179,6 +180,28 @@ public class LibraryService : ILibraryService
         }
 
         return true;
+    }
+
+    public async Task<IEnumerable<ILeaseModel>> GetAllLeases()
+    {
+        // Todo
+        var leases = await _leases.GetAllAsync();
+        var returns = await _returns.GetAllAsync();
+        return leases.Select(
+            l => new LeaseModel(
+                this,
+                l.Id,
+                l.Time,
+                l.ReturnDate,
+                returns.SingleOrDefault( r => r.Lease.Id == l.Id )?.Time,
+                new UserModel( this, l.Borrower.Id, l.Borrower.FirstName, l.Borrower.Surname ),
+                new BookModel(
+                    this,
+                    l.LeasedBook.Id,
+                    l.LeasedBook.BookInfo.Title,
+                    l.LeasedBook.BookInfo.Author,
+                    null,
+                    false ) ) );
     }
 
     public async Task<bool> IsLeaseReturned(ILease lease)

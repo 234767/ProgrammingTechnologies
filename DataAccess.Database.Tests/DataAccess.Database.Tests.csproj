@@ -25,4 +25,13 @@
       <ProjectReference Include="..\DataAccess.Database\DataAccess.Database.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestData.mdf">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+      <None Update="TestData_log.ldf">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -32,4 +32,5 @@ public interface ILibraryService
     Task<IEnumerable<IBookModel>> SearchBooks( string property, string? name );
     Task SaveBook( IBookModel bookModel );
     Task<bool> IsBookAvailable( string id );
+    Task<IEnumerable<ILeaseModel>> GetAllLeases();
 }

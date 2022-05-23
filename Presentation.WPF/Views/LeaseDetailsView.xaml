@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="Presentation.WPF.Views.LeaseDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Presentation.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="250" d:DesignWidth="800">
+    <GroupBox Grid.Row="0" Header="Lease Details">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center">Leased From:</Label>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding StartDate}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center">To:</Label>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding EndDate}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center">Returned:</Label>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ReturnDate}" />
+                </StackPanel>
+            </Grid>
+
+            <GroupBox Grid.Row="1" Header="Book Details">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">Id:</Label>
+                    <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">Title:</Label>
+                    <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">Author:</Label>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding BookDetails.Id}" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding BookDetails.Title}" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding BookDetails.Author}" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="1" Grid.Column="1" Header="User Details">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">Id:</Label>
+                    <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">First Name:</Label>
+                    <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">Last Name:</Label>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding UserDetails.Id}" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding UserDetails.FirstName}" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding UserDetails.Surname}" />
+                </Grid>
+            </GroupBox>
+            <Button Grid.Row="2" Grid.Column="1" Padding="20,5" VerticalAlignment="Center" HorizontalAlignment="Right" IsEnabled="{Binding ButtonEnabled}" Command="{Binding ReturnButtonClickCommand}">Return</Button>
+        </Grid>
+    </GroupBox>
+</UserControl>

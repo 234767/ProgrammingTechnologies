@@ -18,5 +18,11 @@
         <DataTemplate DataType="{x:Type viewmodels:UserEditViewModel}">
             <views:UserEditView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:LeaseCollectionViewModel}">
+            <views:TransactionsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:LeaseDetailsViewModel}">
+            <views:LeaseDetailsView />
+        </DataTemplate>
     </Application.Resources>
 </Application>
