@@ -25,13 +25,13 @@ public static class TestingDataProvider
             new DateOnly(1951, 06, 16).ToDateTime(new TimeOnly())));
 
     public static readonly ILease Lease1 =
-        new Lease("lease_1", DateTime.Parse("27/02/2022 12:00:00"), Book1, User1, new DateTime(2020,01,01));
+        new Lease("lease_1", new DateTime(2022,02,27), Book1, User1, new DateTime(2020,01,01));
 
     public static readonly IReturn Return1 =
-        new Return("return_1", Lease1, DateTime.Parse("03/03/2022 12:00:00"));
+        new Return("return_1", Lease1, new DateTime(2022,02,03));
 
     public static readonly ILease Lease2 =
-        new Lease("lease_2", DateTime.Parse("14/04/2022 12:00:00"), Book2, User2, new DateTime(2020, 01, 01));
+        new Lease("lease_2", new DateTime(2022, 04,14), Book2, User2, new DateTime(2020, 01, 01));
 
     public static async Task<(IBookRepository Books, IUserRepository Users, ILeaseRepository Events, IReturnRepository Returns)> GenerateHardCodedData()
     {
